@@ -1,0 +1,42 @@
+.app-footer {
+  height: 32px;
+  background-color: #f3d4b6;
+  color: #3e2723;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-top: 1px solid var(--border-color);
+  z-index: 10;
+}
+
+.footer-left, .footer-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-label {
+  color: #5d4037;
+}
+
+.status-value {
+  color: #1a1a1a;
+}
+
+.separator {
+  color: #8d6e63;
+  margin: 0 8px;
+}
+
+.footer-link {
+  color: #5d4037;
+  cursor: pointer;
+}
+
+.footer-link:hover {
+  color: #1a1a1a;
+}

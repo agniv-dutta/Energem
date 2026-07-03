@@ -1,0 +1,97 @@
+.app-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-panel);
+  padding: 0 24px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-box {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--accent-teal);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(117, 196, 184, 0.1);
+}
+
+.logo-inner-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-teal);
+}
+
+.brand-text h1 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--accent-teal);
+  line-height: 1.2;
+}
+
+.brand-text p {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.header-nav {
+  display: flex;
+  height: 100%;
+  gap: 32px;
+}
+
+.nav-tab {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.nav-tab:hover {
+  color: var(--text-main);
+}
+
+.nav-tab.active {
+  color: var(--accent-amber);
+  border-bottom-color: var(--accent-amber);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon-btn {
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+
+.icon-btn:hover {
+  color: var(--accent-teal);
+}
+
+.time-display {
+  font-size: 14px;
+  color: var(--accent-amber);
+  letter-spacing: 1px;
+  padding-left: 16px;
+  border-left: 1px solid var(--border-color);
+}
