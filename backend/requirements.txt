@@ -1,0 +1,36 @@
+# FastAPI & API framework
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+pydantic==2.7.4
+pydantic-settings==2.3.4
+httpx==0.27.0
+
+# Groq LLM (replacing OpenAI/Anthropic)
+groq==0.9.0
+
+# LangChain orchestration
+langchain==0.2.5
+langchain-groq==0.1.6
+langchain-community==0.2.5
+
+# Database
+sqlalchemy==2.0.31
+asyncpg==0.29.0
+redis==5.0.7
+alembic==1.13.1
+
+# Data processing
+pandas==2.2.2
+numpy==1.26.4
+
+# External APIs
+yfinance==0.2.40
+newsapi-python==0.2.7
+
+# Async support
+aiohttp==3.9.5
+aiofiles==24.1.0
+
+# Logging & utilities
+python-json-logger==2.0.7
+python-multipart==0.0.9
