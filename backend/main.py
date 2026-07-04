@@ -1,6 +1,15 @@
+import os
+import sys
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+# Allow running from either repo root (backend.main:app) or backend dir (main:app).
+current_dir = os.path.dirname(os.path.abspath(__file__))
+repo_root = os.path.dirname(current_dir)
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+
 from backend.config import get_settings
 from backend.api.routes import router
 from backend.db.session import init_db
@@ -56,5 +65,11 @@ async def root():
             "market": "/api/market",
             "sanctions": "/api/sanctions",
             "news": "/api/news",
+            "escalation": "/api/escalation",
+            "escalation_assess": "/api/escalation/assess",
+            "resilience": "/api/resilience",
+            "resilience_assess": "/api/resilience/assess",
+            "geospatial": "/api/geospatial",
+            "compare": "/api/compare",
         },
     }

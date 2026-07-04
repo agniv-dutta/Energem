@@ -17,7 +17,7 @@
 ### 2. **Complete Architecture**
 - ✅ Backend: Python FastAPI + LangChain multi-agent orchestration + Claude LLM
 - ✅ Frontend: React + TypeScript + Tailwind + Recharts (dashboard + scenarios + recommendations)
-- ✅ Database: PostgreSQL + Redis (state management) + Optional Weaviate (RAG)
+- ✅ Database: SQLite (prototype state/data persistence) + Optional Weaviate (RAG)
 - ✅ Integration points: NewsAPI, yfinance, OFAC, OpenWeatherMap
 
 ### 3. **5 Production-Ready Prompts**
@@ -113,7 +113,9 @@ cd frontend
 npm install axios zustand react-query recharts
 
 # Database
-docker-compose up -d
+# SQLite DB auto-creates on backend startup
+cd backend
+python -m uvicorn backend.main:app --reload --port 8000
 ```
 
 ### Step 4: Build First Agent (By end of Day 2)

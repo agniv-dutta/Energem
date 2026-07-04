@@ -257,7 +257,7 @@ scenarios = {
                                   ↕ (Database)
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        DATA LAYER (Storage)                         │
-│  PostgreSQL | Redis (cache) | Vector DB (embeddings)               │
+│  SQLite (prototype) | In-memory cache | Vector DB (optional)       │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -505,7 +505,8 @@ FORMAT: Comparison table + narrative explanation
 Language: Python 3.10+
 Framework: FastAPI (REST API) + LangChain (agentic orchestration)
 LLM: Claude (via Anthropic API)
-Database: PostgreSQL + Redis
+Database: SQLite (prototype) + in-memory cache
+Database: SQLite (prototype) + in-memory cache
 Vector DB: Weaviate or Pinecone (for RAG)
 Data Processing: Pandas, NumPy
 External APIs: NewsAPI, yfinance, OFAC
@@ -576,7 +577,7 @@ energy-guard/
 ├── frontend/                   # React frontend (see section 9)
 
 ├── .env.example               # Environment template
-├── docker-compose.yml          # PostgreSQL + Redis services
+├── docker-compose.yml          # Optional infra (not required for prototype)
 └── README.md
 ```
 
@@ -588,8 +589,7 @@ ANTHROPIC_API_KEY=sk-ant-v0-xxxxx
 NEWSAPI_KEY=xxxxx
 
 # Database
-DATABASE_URL=postgresql://user:password@localhost:5432/energy_guard
-REDIS_URL=redis://localhost:6379
+DATABASE_URL=sqlite:///./energem.db
 
 # Vector DB
 WEAVIATE_URL=http://localhost:8080
@@ -1139,7 +1139,7 @@ If you're implementing a component, please:
 - [ ] FastAPI app initialized
 - [ ] Models defined (Risk, Scenario, Recommendation)
 - [ ] Database tables created
-- [ ] Redis cache configured
+- [ ] In-memory cache path validated
 
 # 3. Frontend scaffolding
 - [ ] React app initialized (Vite + TypeScript)

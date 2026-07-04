@@ -11,8 +11,7 @@ class Settings(BaseSettings):
     newsapi_key: str = ""
 
     # Database
-    database_url: str = "postgresql://user:password@localhost:5432/energem"
-    redis_url: str = "redis://localhost:6379"
+    database_url: str = "sqlite:///./energem.db"
 
     # API Config
     fastapi_host: str = "0.0.0.0"

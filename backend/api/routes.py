@@ -8,6 +8,10 @@ from backend.agents.signal_processor import process_articles
 from backend.agents.risk_scorer import calculate_risks
 from backend.agents.scenario_modeller import model_scenario
 from backend.agents.recommender import generate_recommendations
+from backend.agents.escalation_detector import assess_escalation
+from backend.agents.resilience_scorer import assess_resilience
+from backend.agents.geospatial_analyzer import analyze_geospatial
+from backend.agents.country_comparator import compare_countries
 from backend.api.schemas import (
     NewsQuery,
     ScenarioQuery,
@@ -16,6 +20,10 @@ from backend.api.schemas import (
     RiskResponse,
     ScenarioResponse,
     RecommendationResponse,
+    EscalationResponse,
+    ResilienceResponse,
+    GeospatialResponse,
+    CountryComparisonResponse,
     DashboardResponse,
     MarketDataResponse,
 )
@@ -84,6 +92,59 @@ async def get_market() -> MarketDataResponse:
 @router.get("/sanctions")
 async def get_sanctions():
     return await get_sanctions_summary()
+
+
+@router.get("/escalation")
+async def get_escalation() -> EscalationResponse:
+    from backend.data.news_ingestion import fetch_news
+    articles = await fetch_news(query="geopolitical tension military conflict energy", page_size=15)
+    result = await assess_escalation(articles)
+    return EscalationResponse(**result)
+
+
+@router.post("/escalation/assess")
+async def assess_events(query: NewsQuery) -> EscalationResponse:
+    articles = await fetch_news(query=query.query, page_size=query.page_size)
+    result = await assess_escalation(articles)
+    return EscalationResponse(**result)
+
+
+@router.get("/resilience")
+async def get_resilience() -> ResilienceResponse:
+    signals_data = await fetch_news(page_size=5)
+    signals_text = " ".join([s.get("title", "") for s in signals_data])
+    scenario_details = "Current geopolitical situation affecting India's crude oil supply chain"
+    result = await assess_resilience(scenario_details=scenario_details, signals=signals_text)
+    return ResilienceResponse(**result)
+
+
+@router.post("/resilience/assess")
+async def assess_resilience_endpoint(query: ScenarioQuery) -> ResilienceResponse:
+    signals_data = await fetch_news(page_size=5)
+    signals_text = " ".join([s.get("title", "") for s in signals_data])
+    scenario_details = f"Scenario: {query.scenario}, Duration: {query.duration_days}d, Supply loss: {query.supply_loss_percent}%"
+    result = await assess_resilience(scenario_details=scenario_details, signals=signals_text)
+    return ResilienceResponse(**result)
+
+
+@router.get("/geospatial")
+async def get_geospatial() -> GeospatialResponse:
+    signals_data = await fetch_news(page_size=5)
+    signals_text = " ".join([s.get("title", "") for s in signals_data])
+    risk_result = await calculate_risks(
+        brent_price=95.00,
+        signals=signals_text,
+    )
+    result = await analyze_geospatial(risk_scores=risk_result.get("corridors", []))
+    return GeospatialResponse(**result)
+
+
+@router.get("/compare")
+async def get_comparison() -> CountryComparisonResponse:
+    signals_data = await fetch_news(page_size=5)
+    context = " ".join([s.get("title", "") for s in signals_data])
+    result = await compare_countries(context=context)
+    return CountryComparisonResponse(**result)
 
 
 @router.get("/dashboard")

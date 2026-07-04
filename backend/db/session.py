@@ -4,7 +4,12 @@ from backend.config import get_settings
 
 settings = get_settings()
 
-engine = create_engine(settings.database_url, echo=False)
+engine_kwargs = {"echo": False}
+if settings.database_url.startswith("sqlite"):
+    # Required for SQLite when used in FastAPI app contexts.
+    engine_kwargs["connect_args"] = {"check_same_thread": False}
+
+engine = create_engine(settings.database_url, **engine_kwargs)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 

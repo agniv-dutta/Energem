@@ -52,7 +52,7 @@
 **Tech Stack:**
 - Backend: Python (FastAPI) + LangChain (multi-agent) + Claude LLM
 - Frontend: React (TypeScript) + Tailwind + Recharts
-- Database: PostgreSQL + Redis
+- Database: SQLite (prototype)
 - APIs: NewsAPI, yfinance, OFAC, Claude, OpenWeatherMap
 
 ---
@@ -117,6 +117,7 @@ DASHBOARD → Risk card | Scenarios | Recommendations | Timeline
 ```bash
 ANTHROPIC_API_KEY      # Claude LLM ($50-100 for hackathon)
 NEWSAPI_KEY            # Geopolitical signals (free tier: 100/day)
+DATABASE_URL=sqlite:///./energem.db  # Local prototype DB
 # yfinance             # Commodity prices (no key, pip install yfinance)
 # OFAC Registry        # Sanctions (no key, download CSV)
 ```
@@ -232,7 +233,13 @@ python -c "import yfinance; print('yfinance working')"
 python -c "from anthropic import Anthropic; print('Claude working')"
 
 # Start FastAPI dev server
-uvicorn main:app --reload --port 8000
+cd backend
+python -m uvicorn backend.main:app --reload --port 8000
+
+# SQLite prototype maintenance
+python scripts/sqlite_tools.py status
+python scripts/sqlite_tools.py backup
+python scripts/sqlite_tools.py reset
 
 # Start React dev server
 npm run dev

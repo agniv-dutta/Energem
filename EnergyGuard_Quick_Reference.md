@@ -9,7 +9,7 @@
 | **Name** | EnergyGuard |
 | **GitHub** | `energy-guard` |
 | **Pitch** | Real-time energy supply chain resilience for India (88% import dependency) |
-| **Stack** | Python (FastAPI) + React + PostgreSQL + Claude LLM |
+| **Stack** | Python (FastAPI) + React + SQLite + Claude LLM |
 | **Deadline** | July 22, 2026 (20 days) |
 | **Key Focus** | Signal detection → Risk scoring → Scenario modeling → Procurement recommendations |
 
@@ -68,9 +68,9 @@ Time to setup: 10 minutes (optional)
 │ [3] Scenario Modeller   → If X, then Y impact  │
 │ [4] Recommender         → Buy X barrels from Y  │
 └─────────────┬────────────────────────────────────┘
-              │ (Data + Cache)
+              │ (Data)
 ┌─────────────▼────────────────────────────────────┐
-│ DATA LAYER (PostgreSQL + Redis)                  │
+│ DATA LAYER (SQLite prototype DB)                 │
 └────────────────────────────────────────────────┘
 ```
 
@@ -200,7 +200,7 @@ energy-guard/
 │   └── package.json
 │
 ├── .env                             ← API keys here
-├── docker-compose.yml               ← DB services
+├── docker-compose.yml               ← Optional infra (unused in prototype)
 └── README.md
 ```
 
@@ -294,7 +294,7 @@ SOLUTION: Multi-agent LLM system that:
 3. Models 30-90 day impacts (supply, price, reserves, GDP)
 4. Recommends procurement strategy (source mix adjustments)
 
-TECH: Python FastAPI backend + React frontend + Claude LLM + PostgreSQL.
+TECH: Python FastAPI backend + React frontend + Claude LLM + SQLite (prototype).
 
 MVP: Risk dashboard + scenario explorer + procurement recommendations.
 
