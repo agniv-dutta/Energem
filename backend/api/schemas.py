@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Literal
 from pydantic import BaseModel, Field
 
 
@@ -12,6 +12,37 @@ class SignalResponse(BaseModel):
     confidence: str
     summary: Optional[str] = None
     source: Optional[str] = None
+
+
+class SignalImpact(BaseModel):
+    risk_delta: str
+    supply_impact: str
+    precedent: str
+
+
+class LatestSignalItem(BaseModel):
+    id: str
+    timestamp: str
+    event_type: str
+    headline: str
+    corridor: str
+    confidence: str
+    classification: list[str]
+    body: str
+    impact: SignalImpact
+
+
+class LatestSignalsResponse(BaseModel):
+    category: str
+    signals: list[LatestSignalItem]
+
+
+class RefreshSignalsResponse(BaseModel):
+    refreshed_articles: int
+    extracted_signals: int
+    current_risk_score: int
+    confidence: str
+    queued_for_retry: int = 0
 
 
 class CorridorRiskResponse(BaseModel):
@@ -66,6 +97,58 @@ class RecommendationResponse(BaseModel):
     recommendations: list[RecommendationItem]
     composite_strategy: Optional[str] = None
     estimated_total_cost_premium: Optional[float] = None
+
+
+class ProcurementRecommendationItem(BaseModel):
+    id: str
+    scenario_id: str
+    priority: str
+    supplier: str
+    volume_bbl_per_day: int
+    eta_days: int
+    cost_premium_per_barrel: float
+    geopolitical_risk: Literal["low", "medium", "high"]
+    confidence: int
+    reasoning: str
+    status: Literal["generated", "pending_approval", "approved", "pending_execution", "executed", "rejected"]
+    approved_by: Optional[str] = None
+    approved_at: Optional[str] = None
+    status_detail: str
+
+
+class ProcurementExecutionReadiness(BaseModel):
+    total_approved_volume: int
+    can_execute_all: bool
+    blockers: list[str]
+
+
+class ProcurementRecommendationsResponse(BaseModel):
+    scenario_id: str
+    authority_level: str
+    recommendations: list[ProcurementRecommendationItem]
+    execution_readiness: ProcurementExecutionReadiness
+
+
+class ProcurementAuthorizeRequest(BaseModel):
+    recommendation_ids: list[str]
+    authorized_by: str
+    authorization_level: Literal["directorate_b", "ministry", "emergency"]
+    reason: str
+
+
+class ProcurementAuthorizeItem(BaseModel):
+    id: str
+    supplier: str
+    status: str
+    approved_at: Optional[str] = None
+
+
+class ProcurementAuthorizeResponse(BaseModel):
+    authorized_count: int
+    total_volume_bbl: int
+    total_cost_premium: str
+    estimated_arrival: str
+    recommendations: list[ProcurementAuthorizeItem]
 
 
 class MarketDataResponse(BaseModel):
@@ -226,6 +309,52 @@ class EscalationResponse(BaseModel):
     affected_corridors: list[str]
     key_actors: list[str]
     summary: str
+
+
+class SimulateRequest(BaseModel):
+    corridor: str = "hormuz"
+    disruption_percent: float = 50
+    duration_days: int = 15
+    affected_nodes: list[str] = ["GULF_STREAM_PIPE_01", "PORT_ARTHUR_REFINERY"]
+    scenario_name: str = "Hormuz Partial Closure"
+    alternatives_activated: bool = True
+
+
+class TimelineEntry(BaseModel):
+    day: int
+    supply_loss_bbl: int
+    spr_remaining_days: float
+    brent_price: float
+    brent_price_range: list[float]
+    refinery_utilization_pct: float
+    cumulative_deficit_bbl: int
+    flags: list[str]
+
+
+class SimulateSummary(BaseModel):
+    total_deficit_bbl: int
+    total_deficit_display: str
+    peak_price: float
+    peak_price_display: str
+    spr_critical_day: int
+    gdp_impact_annualized_pct: float
+    recovery_estimate: Optional[str] = None
+    recommended_actions: list[str]
+
+
+class SimulateFlag(BaseModel):
+    day: int
+    severity: str
+    message: str
+
+
+class SimulateResponse(BaseModel):
+    scenario: str
+    parameters: dict
+    timeline: list[TimelineEntry]
+    summary: SimulateSummary
+    flags: list[SimulateFlag]
+    uncertainty_note: str
 
 
 class DashboardResponse(BaseModel):

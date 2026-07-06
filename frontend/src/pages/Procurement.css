@@ -151,16 +151,6 @@
   flex-shrink: 0;
 }
 
-.proc-badge.approved {
-  border-color: var(--accent-teal);
-  color: var(--accent-teal);
-}
-
-.proc-badge.pending {
-  border-color: var(--accent-amber);
-  color: var(--accent-amber);
-}
-
 .proc-footer-text {
   font-size: 11px;
   color: var(--text-muted);
@@ -245,7 +235,127 @@
   width: 60%;
 }
 
-.authorize-btn:hover {
+.authorize-btn:hover:not(:disabled) {
   background-color: #e0aa68;
   box-shadow: 0 0 20px rgba(208, 156, 90, 0.3);
+}
+
+.authorize-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.proc-denied-text {
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+/* Summary Row */
+.proc-summary-row {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border-color);
+}
+
+.proc-summary-item {
+  flex: 1;
+  padding: 16px 20px;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.proc-summary-item:last-child {
+  border-right: none;
+}
+
+.proc-summary-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.proc-summary-value {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+/* Error */
+.proc-error {
+  padding: 12px 16px;
+  color: var(--accent-red);
+  font-size: 12px;
+  letter-spacing: 1px;
+  border: 1px solid var(--accent-red);
+  background-color: rgba(216, 82, 82, 0.08);
+}
+
+/* Readiness */
+.proc-readiness {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border: 1px solid var(--border-color);
+}
+
+.proc-readiness-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.proc-readiness-value {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: var(--text-main);
+}
+
+.proc-readiness-blockers {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  text-align: right;
+  max-width: 60%;
+}
+
+/* Accent variants */
+.approved-accent {
+  background-color: var(--accent-teal);
+}
+
+.pending-accent {
+  background-color: var(--accent-amber);
+}
+
+/* Badge per status */
+.proc-badge.generated {
+  border-color: #555;
+  color: #888;
+}
+
+.proc-badge.pending_approval,
+.proc-badge.pending_execution {
+  border-color: var(--accent-amber);
+  color: var(--accent-amber);
+}
+
+.proc-badge.approved {
+  border-color: var(--accent-teal);
+  color: #1a1a1a;
+  background-color: var(--accent-teal);
+}
+
+.proc-badge.executed {
+  border-color: var(--accent-teal);
+  color: var(--accent-teal);
+}
+
+.proc-badge.rejected {
+  border-color: var(--accent-red);
+  color: var(--accent-red);
 }

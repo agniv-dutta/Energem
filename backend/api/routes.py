@@ -1,5 +1,6 @@
 from datetime import datetime
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
 from backend.data.news_ingestion import fetch_news
 from backend.data.market_data import get_commodity_prices
 from backend.data.sanctions_loader import get_sanctions_summary
@@ -12,11 +13,17 @@ from backend.agents.escalation_detector import assess_escalation
 from backend.agents.resilience_scorer import assess_resilience
 from backend.agents.geospatial_analyzer import analyze_geospatial
 from backend.agents.country_comparator import compare_countries
+from backend.agents.simulator import simulate
+from backend.db.session import get_db
+from backend.services.procurement_workflow import list_procurement_recommendations, authorize_recommendations
+from backend.services.news_signals import get_latest_signal_payload, refresh_signal_pipeline
 from backend.api.schemas import (
     NewsQuery,
     ScenarioQuery,
     RecommendQuery,
     SignalResponse,
+    LatestSignalsResponse,
+    RefreshSignalsResponse,
     RiskResponse,
     ScenarioResponse,
     RecommendationResponse,
@@ -24,8 +31,13 @@ from backend.api.schemas import (
     ResilienceResponse,
     GeospatialResponse,
     CountryComparisonResponse,
+    SimulateRequest,
+    SimulateResponse,
     DashboardResponse,
     MarketDataResponse,
+    ProcurementRecommendationsResponse,
+    ProcurementAuthorizeRequest,
+    ProcurementAuthorizeResponse,
 )
 
 router = APIRouter(prefix="/api", tags=["Energem API"])
@@ -48,6 +60,70 @@ async def extract_signals(query: NewsQuery) -> list[SignalResponse]:
     cleaned = [clean_news_article(a) for a in articles]
     signals = await process_articles(cleaned)
     return [SignalResponse(**s) for s in signals]
+
+
+@router.get("/procurement/recommendations", response_model=ProcurementRecommendationsResponse)
+async def get_procurement_recommendations(
+    scenario_id: str | None = None,
+    status: str | None = None,
+    db: Session = Depends(get_db),
+):
+    payload = list_procurement_recommendations(db, scenario_id=scenario_id, status=status)
+    return ProcurementRecommendationsResponse(**payload)
+
+
+@router.post("/procurement/authorize", response_model=ProcurementAuthorizeResponse)
+async def authorize_procurement(request: ProcurementAuthorizeRequest, db: Session = Depends(get_db)):
+    try:
+        payload = authorize_recommendations(
+            db=db,
+            recommendation_ids=request.recommendation_ids,
+            authorized_by=request.authorized_by,
+            authorization_level=request.authorization_level,
+            reason=request.reason,
+        )
+        return ProcurementAuthorizeResponse(**payload)
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        message = str(exc)
+        if "conflicting status" in message:
+            raise HTTPException(status_code=409, detail=message) from exc
+        if "depends on prior approvals" in message:
+            raise HTTPException(status_code=424, detail=message) from exc
+        raise HTTPException(status_code=400, detail=message) from exc
+
+
+@router.get("/signals/latest", response_model=LatestSignalsResponse)
+async def latest_signals(
+    category: str = Query("all", alias="category"),
+    limit: int = Query(10, ge=1, le=50),
+    db: Session = Depends(get_db),
+):
+    payload = get_latest_signal_payload(db, limit=limit, category=category)
+    if payload["signals"]:
+        return LatestSignalsResponse(**payload)
+
+    await refresh_signal_pipeline(db)
+    latest = get_latest_signal_payload(db, limit=limit, category=category)
+    return LatestSignalsResponse(**latest)
+
+
+@router.post("/signals/refresh", response_model=RefreshSignalsResponse)
+async def refresh_signals(db: Session = Depends(get_db)):
+    result = await refresh_signal_pipeline(db)
+    snapshot = result["snapshot"]
+    return RefreshSignalsResponse(
+        refreshed_articles=result["refreshed_articles"],
+        extracted_signals=result["extracted_signals"],
+        current_risk_score=int(round(snapshot.composite_score)),
+        confidence=snapshot.confidence,
+        queued_for_retry=result.get("queued_for_retry", 0),
+    )
 
 
 @router.get("/risk")
@@ -145,6 +221,19 @@ async def get_comparison() -> CountryComparisonResponse:
     context = " ".join([s.get("title", "") for s in signals_data])
     result = await compare_countries(context=context)
     return CountryComparisonResponse(**result)
+
+
+@router.post("/scenarios/simulate", response_model=SimulateResponse)
+async def run_simulation(req: SimulateRequest):
+    result = simulate(
+        corridor=req.corridor,
+        disruption_percent=req.disruption_percent,
+        duration_days=req.duration_days,
+        affected_nodes=req.affected_nodes,
+        scenario_name=req.scenario_name,
+        alternatives_activated=req.alternatives_activated,
+    )
+    return result
 
 
 @router.get("/dashboard")

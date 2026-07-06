@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from backend.config import get_settings
 
@@ -26,4 +26,32 @@ def get_db():
 
 
 def init_db():
+    from backend.db import models  # noqa: F401 - ensure table metadata is registered
+
     Base.metadata.create_all(bind=engine)
+    _ensure_procurement_schema()
+
+
+def _ensure_procurement_schema():
+    inspector = inspect(engine)
+    if "recommendations" in inspector.get_table_names():
+        existing_columns = {column["name"] for column in inspector.get_columns("recommendations")}
+        required_columns = {
+            "supplier": "TEXT",
+            "volume_bbl_per_day": "INTEGER",
+            "eta_days": "INTEGER",
+            "cost_premium_per_barrel": "FLOAT",
+            "geopolitical_risk": "VARCHAR(20)",
+            "confidence": "INTEGER",
+            "reasoning": "TEXT",
+            "status": "VARCHAR(30)",
+            "approved_by": "VARCHAR(255)",
+            "approved_at": "DATETIME",
+        }
+        with engine.begin() as connection:
+            for column_name, column_type in required_columns.items():
+                if column_name not in existing_columns:
+                    connection.execute(text(f"ALTER TABLE recommendations ADD COLUMN {column_name} {column_type}"))
+
+    if "authorization_log" not in inspector.get_table_names():
+        Base.metadata.tables["authorization_log"].create(bind=engine, checkfirst=True)

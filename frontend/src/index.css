@@ -97,6 +97,7 @@ button {
 .text-amber { color: var(--accent-amber); }
 .text-teal { color: var(--accent-teal); }
 .text-red { color: var(--accent-red); }
+.text-main { color: var(--text-main); }
 .text-muted { color: var(--text-muted); }
 
 .bg-amber { background-color: var(--accent-amber); }

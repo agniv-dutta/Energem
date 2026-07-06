@@ -60,6 +60,8 @@ async def root():
             "dashboard": "/api/dashboard",
             "risk": "/api/risk",
             "signals": "/api/signals",
+            "signals_latest": "/api/signals/latest",
+            "signals_refresh": "/api/signals/refresh",
             "scenario": "/api/scenario",
             "recommend": "/api/recommend",
             "market": "/api/market",
@@ -71,5 +73,6 @@ async def root():
             "resilience_assess": "/api/resilience/assess",
             "geospatial": "/api/geospatial",
             "compare": "/api/compare",
+            "simulate": "/api/scenarios/simulate",
         },
     }
