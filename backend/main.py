@@ -57,6 +57,7 @@ async def root():
         "status": "running",
         "endpoints": {
             "health": "/api/health",
+            "corridors_status": "/api/corridors/status",
             "dashboard": "/api/dashboard",
             "risk": "/api/risk",
             "signals": "/api/signals",

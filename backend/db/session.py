@@ -30,6 +30,7 @@ def init_db():
 
     Base.metadata.create_all(bind=engine)
     _ensure_procurement_schema()
+    _seed_corridors()
 
 
 def _ensure_procurement_schema():
@@ -55,3 +56,26 @@ def _ensure_procurement_schema():
 
     if "authorization_log" not in inspector.get_table_names():
         Base.metadata.tables["authorization_log"].create(bind=engine, checkfirst=True)
+
+
+def _seed_corridors():
+    from backend.db.models import Corridor
+    from backend.services.corridor_service import SEED_CORRIDORS
+
+    inspector = inspect(engine)
+    if "corridors" not in inspector.get_table_names():
+        return
+    session = SessionLocal()
+    try:
+        existing_ids = {row[0] for row in session.query(Corridor.corridor_id).all()}
+        inserted = 0
+        for data in SEED_CORRIDORS:
+            if data["corridor_id"] not in existing_ids:
+                session.add(Corridor(**data))
+                inserted += 1
+        if inserted:
+            session.commit()
+    except Exception:
+        session.rollback()
+    finally:
+        session.close()

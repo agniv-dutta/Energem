@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { CorridorStatus } from '../services/api';
 
 export type ModalType = 'details' | 'reroute' | null;
 
@@ -9,6 +10,10 @@ export interface CorridorData {
   dailyFlow: string;
   confidence: string;
   historicalBaseline: number;
+  trend?: string;
+  activeThreats?: number;
+  lastSignal?: string;
+  alternativeRoutes?: CorridorStatus['alternative_routes'];
 }
 
 export interface SimulationResult {
@@ -53,6 +58,9 @@ interface AppState {
   authorizationStatus: Record<number, string>;
   recommendations: Recommendation[];
   toast: { message: string; type: 'success' | 'error' } | null;
+  corridors: CorridorStatus[];
+  corridorsUpdatedAt: string | null;
+  corridorsLoading: boolean;
 
   setCurrentPage: (page: string) => void;
   setSimulationRunning: (v: boolean) => void;
@@ -63,6 +71,8 @@ interface AppState {
   setRecommendations: (r: Recommendation[]) => void;
   showToast: (message: string, type: 'success' | 'error') => void;
   clearToast: () => void;
+  setCorridors: (corridors: CorridorStatus[], updatedAt: string) => void;
+  setCorridorsLoading: (v: boolean) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -75,6 +85,9 @@ export const useAppStore = create<AppState>((set) => ({
   authorizationStatus: {},
   recommendations: [],
   toast: null,
+  corridors: [],
+  corridorsUpdatedAt: null,
+  corridorsLoading: false,
 
   setCurrentPage: (page) => set({ currentPage: page }),
   setSimulationRunning: (v) => set({ simulationRunning: v }),
@@ -85,4 +98,6 @@ export const useAppStore = create<AppState>((set) => ({
   setRecommendations: (r) => set({ recommendations: r }),
   showToast: (message, type) => set({ toast: { message, type } }),
   clearToast: () => set({ toast: null }),
+  setCorridors: (corridors, updatedAt) => set({ corridors, corridorsUpdatedAt: updatedAt }),
+  setCorridorsLoading: (v) => set({ corridorsLoading: v }),
 }));

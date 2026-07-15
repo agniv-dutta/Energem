@@ -38,4 +38,38 @@ export async function fetchLatestSignals(category = 'all') {
   return data;
 }
 
+export interface CorridorAlternative {
+  name: string;
+  distance_nm: number;
+  transit_days_add: number;
+  risk: string;
+}
+
+export interface CorridorStatus {
+  id: string;
+  name: string;
+  key: string;
+  risk_score: number;
+  trend: string;
+  daily_flow_bbl: number;
+  daily_flow_impacted_bbl: number;
+  active_threats: number;
+  last_signal: string;
+  confidence: string;
+  historical_baseline_risk: number;
+  alternative_routes: CorridorAlternative[];
+}
+
+export interface CorridorsResponse {
+  corridors: CorridorStatus[];
+  updated_at: string;
+  snapshot_time: string | null;
+  total_active_signals: number;
+}
+
+export async function fetchCorridors(): Promise<CorridorsResponse> {
+  const { data } = await api.get('/api/corridors/status');
+  return data;
+}
+
 export default api;

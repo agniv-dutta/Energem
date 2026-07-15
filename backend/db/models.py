@@ -64,6 +64,19 @@ class RiskSignal(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+class Corridor(Base):
+    __tablename__ = "corridors"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    corridor_id = Column(String(50), nullable=False, unique=True, index=True)
+    name = Column(String(255), nullable=False)
+    key_value = Column(String(50), nullable=False, index=True)
+    baseline_daily_flow_bbl = Column(Integer, nullable=False)
+    historical_baseline_risk = Column(Float, nullable=False, default=50.0)
+    alternative_routes = Column(JSON, nullable=False, default=list)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
 class CorridorRisk(Base):
     __tablename__ = "corridor_risks"
 

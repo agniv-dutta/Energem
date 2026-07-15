@@ -205,6 +205,10 @@
   background: linear-gradient(90deg, #d85252, #e86b4a);
 }
 
+.heatmap-mid {
+  background: linear-gradient(90deg, #d09c5a, #c4883a);
+}
+
 .table-btn {
   font-family: var(--font-tech);
   font-size: 10px;

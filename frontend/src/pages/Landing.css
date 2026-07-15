@@ -1,0 +1,445 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Rajdhani:wght@500;600;700&display=swap');
+
+:root {
+  --void: #0A0C0B;
+  --panel: #14171A;
+  --cyanotype: #4E8C86;
+  --brass: #A67C3D;
+  --flare-amber: #E2892C;
+  --manifest-paper: #C9C2AE;
+}
+
+.landing-page {
+  background-color: var(--void);
+  color: var(--manifest-paper);
+  font-family: 'IBM Plex Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* Centered with max-width */
+  align-items: center;
+  width: 100%;
+}
+
+.landing-container {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography Overrides */
+.font-display {
+  font-family: 'Rajdhani', sans-serif;
+  text-transform: uppercase;
+}
+
+.font-data {
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Hairline divider */
+.brass-divider {
+  border: 0;
+  height: 1px;
+  background-color: var(--brass);
+  width: 100%;
+  margin: 0;
+}
+.cyanotype-divider {
+  border: 0;
+  height: 1px;
+  background-color: var(--cyanotype);
+  width: 100%;
+  margin: 0;
+}
+
+/* Section 1: Masthead */
+.landing-masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--brass);
+}
+
+.masthead-logo {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  color: var(--manifest-paper);
+}
+
+.masthead-center {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gauge-svg {
+  width: 120px;
+  height: 60px;
+}
+
+.gauge-label {
+  font-size: 0.7rem;
+  color: var(--manifest-paper);
+  margin-top: 4px;
+}
+
+.compass-nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.compass-link {
+  font-size: 0.8rem;
+  color: var(--manifest-paper);
+  opacity: 0.4;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.compass-link.active {
+  color: var(--cyanotype);
+  opacity: 1;
+  border-bottom: 1px solid var(--cyanotype);
+  padding-bottom: 2px;
+}
+
+.masthead-actions {
+  display: flex;
+  gap: 1rem;
+  color: var(--cyanotype);
+}
+
+/* Section 2: Ticker Feed */
+.landing-ticker {
+  background-color: var(--manifest-paper);
+  color: var(--void);
+  padding: 0.5rem 2rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-content {
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+  animation: none; /* Controlled by React component */
+}
+
+.ticker-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  cursor: pointer;
+}
+
+.ticker-item:hover {
+  text-decoration: underline;
+}
+
+/* Section 3: Hero */
+.landing-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+}
+
+.hero-status {
+  border: 1px solid var(--cyanotype);
+  color: var(--manifest-paper);
+  padding: 0.5rem 2rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  margin-bottom: 2rem;
+}
+
+.hero-title {
+  font-size: 4.5rem;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.hero-title .highlight {
+  color: var(--cyanotype);
+}
+
+.hero-subtitle {
+  font-size: 1rem;
+  color: var(--manifest-paper);
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 2rem auto;
+  line-height: 1.6;
+}
+
+/* Section 4: CTA Button */
+.cta-container {
+  margin-top: 2rem;
+  position: relative;
+  padding: 1rem;
+}
+
+/* Corner brackets */
+.cta-container::before, .cta-container::after,
+.cta-button::before, .cta-button::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--brass);
+  border-style: solid;
+  transition: border-color 0.1s ease-out;
+}
+
+.cta-container::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
+.cta-container::after { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+
+.cta-button {
+  background-color: var(--brass);
+  color: var(--void);
+  border: none;
+  padding: 1rem 3rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.1s ease-out;
+  position: relative;
+}
+
+.cta-button:hover {
+  color: var(--flare-amber);
+}
+.cta-container:hover::before, .cta-container:hover::after {
+  border-color: var(--flare-amber);
+}
+
+/* Section 5: Three Columns */
+.landing-value-prop {
+  display: flex;
+  margin-top: 6rem;
+  border-top: 1px solid var(--brass);
+  border-bottom: 1px solid var(--brass);
+}
+
+.value-col {
+  flex: 1;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.value-col:not(:last-child) {
+  border-right: 1px solid var(--brass);
+}
+
+.value-col-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  color: var(--cyanotype);
+}
+
+.value-icon {
+  width: 32px;
+  height: 32px;
+  fill: none;
+  stroke: var(--cyanotype);
+  stroke-width: 2;
+}
+
+.value-title {
+  font-size: 1.2rem;
+  letter-spacing: 0.15em;
+  color: var(--manifest-paper);
+}
+
+.value-desc {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--manifest-paper);
+  opacity: 0.8;
+}
+
+/* Section 6: Info Bar */
+.landing-info-bar {
+  background-color: rgba(166, 124, 61, 0.1);
+  border-bottom: 1px solid var(--brass);
+  padding: 0.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--brass);
+  font-size: 0.75rem;
+}
+
+/* Section 7: Stats Row */
+.landing-stats {
+  display: flex;
+  padding: 3rem 2rem;
+}
+
+.stat-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-col:not(:last-child) {
+  border-right: 1px solid var(--border-color); /* Need a muted color here or brass? Mockup has subtle line */
+}
+.stat-col {
+  position: relative;
+}
+.stat-col::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 2rem;
+  right: 2rem;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--manifest-paper);
+  opacity: 0.6;
+  margin-bottom: 0.5rem;
+  padding: 0 2rem;
+  margin-top: 2rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  color: var(--cyanotype);
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0 2rem;
+}
+
+.stat-unit {
+  font-size: 1rem;
+}
+
+.stat-icon {
+  margin-left: auto;
+  opacity: 0.3;
+}
+
+/* Section 8: Visualizer */
+.landing-visualizer {
+  display: flex;
+  padding: 2rem;
+  gap: 4rem;
+  margin-bottom: 4rem;
+}
+
+.visualizer-box {
+  flex: 1.5;
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  position: relative;
+}
+
+/* Corners for visualizer */
+.visualizer-box::before, .visualizer-box::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--cyanotype);
+  border-style: solid;
+}
+.visualizer-box::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
+.visualizer-box::after { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+
+.visualizer-title {
+  position: absolute;
+  top: -10px;
+  left: 2rem;
+  background-color: var(--void);
+  padding: 0 1rem;
+  color: var(--cyanotype);
+  font-size: 0.8rem;
+}
+
+.visualizer-image {
+  width: 100%;
+  height: auto;
+  filter: grayscale(100%) contrast(120%);
+  opacity: 0.8;
+}
+
+.visualizer-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: var(--brass);
+}
+
+.visualizer-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.visualizer-heading {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  letter-spacing: 0.1em;
+}
+
+.visualizer-item {
+  border-left: 1px solid var(--brass);
+  padding-left: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.visualizer-item-title {
+  color: var(--cyanotype);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.visualizer-item-desc {
+  font-size: 0.9rem;
+  color: var(--manifest-paper);
+  opacity: 0.7;
+  line-height: 1.5;
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

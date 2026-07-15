@@ -15,6 +15,7 @@ from backend.agents.geospatial_analyzer import analyze_geospatial
 from backend.agents.country_comparator import compare_countries
 from backend.agents.simulator import simulate
 from backend.db.session import get_db
+from backend.services.corridor_service import get_dynamic_corridors
 from backend.services.procurement_workflow import list_procurement_recommendations, authorize_recommendations
 from backend.services.news_signals import get_latest_signal_payload, refresh_signal_pipeline
 from backend.api.schemas import (
@@ -46,6 +47,11 @@ router = APIRouter(prefix="/api", tags=["Energem API"])
 @router.get("/health")
 async def health_check():
     return {"status": "ok", "app": "Energem", "timestamp": datetime.utcnow().isoformat()}
+
+
+@router.get("/corridors/status")
+async def get_corridor_status(db: Session = Depends(get_db)):
+    return get_dynamic_corridors(db)
 
 
 @router.post("/news")
