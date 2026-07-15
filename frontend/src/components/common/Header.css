@@ -95,3 +95,70 @@
   padding-left: 16px;
   border-left: 1px solid var(--border-color);
 }
+
+/* Responsive: Tablet */
+@media (max-width: 1024px) {
+  .app-header {
+    padding: 0 16px;
+  }
+
+  .header-nav {
+    gap: 20px;
+  }
+
+  .nav-tab {
+    font-size: 11px;
+  }
+}
+
+/* Responsive: Smaller Tablet / Phone */
+@media (max-width: 768px) {
+  .app-header {
+    height: auto;
+    min-height: 56px;
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .header-nav {
+    order: 3;
+    width: 100%;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .nav-tab {
+    font-size: 11px;
+    padding: 0 12px;
+  }
+
+  .brand-text h1 {
+    font-size: 16px;
+  }
+
+  .brand-text p {
+    font-size: 9px;
+  }
+
+  .time-display {
+    font-size: 12px;
+    padding-left: 12px;
+  }
+}
+
+/* Responsive: Small Phone */
+@media (max-width: 375px) {
+  .header-actions {
+    gap: 10px;
+  }
+
+  .time-display {
+    display: none;
+  }
+
+  .brand-text h1 {
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+}

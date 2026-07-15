@@ -31,3 +31,32 @@
   padding: 24px;
   height: 100%;
 }
+
+/* Responsive: Tablet */
+@media (max-width: 1024px) {
+  .page-container {
+    padding: 16px;
+  }
+}
+
+/* Responsive: Smaller Tablet / Phone */
+@media (max-width: 768px) {
+  .main-wrapper {
+    flex-direction: column;
+  }
+
+  .main-content {
+    width: 100%;
+  }
+
+  .page-container {
+    padding: 12px;
+  }
+}
+
+/* Responsive: Small Phone */
+@media (max-width: 375px) {
+  .page-container {
+    padding: 8px;
+  }
+}

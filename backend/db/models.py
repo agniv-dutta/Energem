@@ -140,3 +140,18 @@ class AuthorizationLog(Base):
     authorized_by = Column(String(255), nullable=False)
     reason = Column(Text)
     timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class HistoricalEvent(Base):
+    __tablename__ = "historical_events"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    event_name = Column(String(255), nullable=False)
+    event_date = Column(DateTime, nullable=False)
+    corridor_affected = Column(String(50), nullable=False, index=True)
+    duration_days = Column(Integer, nullable=False)
+    disruption_percent = Column(Float, nullable=False)
+    price_impact_percent = Column(Float, nullable=False)
+    supply_loss_bbl = Column(Integer, nullable=False)
+    lessons_learned = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)

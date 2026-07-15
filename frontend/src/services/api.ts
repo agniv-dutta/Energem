@@ -72,4 +72,58 @@ export async function fetchCorridors(): Promise<CorridorsResponse> {
   return data;
 }
 
+export interface LandingSignal {
+  timestamp: string;
+  event: string;
+  confidence: string;
+  risk_delta: string;
+}
+
+export interface LandingData {
+  risk_score: number;
+  trend_delta: number;
+  trend_direction: string;
+  trend_hours: number;
+  top_corridor: string;
+  last_3_signals: LandingSignal[];
+  feed_status: string;
+  last_updated_at: string;
+}
+
+export async function fetchLandingData(): Promise<LandingData> {
+  const { data } = await api.get('/api/landing');
+  return data;
+}
+
+export interface HistoricalComparisonItem {
+  historical_event: string;
+  date: string;
+  years_ago: number;
+  similarity_score: number;
+  comparison: {
+    current_event: { probability: number; estimated_duration: number };
+    historical_event: { actual_disruption: number; actual_duration: number; actual_supply_loss: number };
+    delta: { duration_diff: number; severity_diff: number; price_impact_historical: number };
+  };
+  lessons_learned: string;
+}
+
+export interface HistoricalComparisonResponse {
+  signal_id: string;
+  current_signal: {
+    summary: string;
+    corridor: string;
+    probability: number;
+    estimated_duration: number | null;
+    detected_at: string | null;
+  };
+  historical_comparisons: HistoricalComparisonItem[];
+  recommendation: string;
+}
+
+export async function fetchHistoricalComparison(signalId: string): Promise<HistoricalComparisonResponse> {
+  const { data } = await api.get(`/api/signals/${signalId}/historical-comparison`);
+  return data;
+}
+
 export default api;

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import './Procurement.css';
 import { authorizeRecommendations, fetchProcurementRecommendations } from '../services/api';
 
@@ -48,39 +48,40 @@ const Procurement: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string>('--:--:--Z');
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        setLoading(true);
-        const response = (await fetchProcurementRecommendations({ scenario_id: 'SID-001', status: 'pending_approval' })) as ProcurementResponse;
-        setData(response);
-        setLastUpdated(new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'));
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load procurement recommendations');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void load();
+  const load = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = (await fetchProcurementRecommendations()) as ProcurementResponse;
+      setData(response);
+      setLastUpdated(new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load procurement recommendations');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const pendingIds = useMemo(
-    () => data?.recommendations.filter((item) => item.status === 'pending_approval').map((item) => item.id) ?? [],
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  const allIds = useMemo(
+    () => data?.recommendations.filter((item) => item.status === 'pending_approval' || item.status === 'generated').map((item) => item.id) ?? [],
     [data],
   );
 
   const handleAuthorizeAll = async () => {
-    if (!pendingIds.length) return;
+    if (!allIds.length) return;
 
     try {
       setSubmitting(true);
       setError(null);
       const response = await authorizeRecommendations({
-        recommendation_ids: pendingIds,
+        recommendation_ids: allIds,
         authorized_by: 'directorate_b_console',
         authorization_level: 'directorate_b',
-        reason: 'Supply disruption - HORMUZ risk 84%',
+        reason: 'Supply disruption - authorized via dashboard',
       });
 
       const approvedItems: Array<{ id: string; status: string; approved_at?: string }> = response.recommendations ?? [];
@@ -116,6 +117,22 @@ const Procurement: React.FC = () => {
     }
   };
 
+  const handleExportPdf = async () => {
+    try {
+      const response = await fetch('/api/procurement/export/pdf');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `energyguard_procurement_${new Date().toISOString().split('T')[0]}.txt`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentElement?.removeChild(link);
+    } catch {
+      alert('Failed to export procurement report');
+    }
+  };
+
   const totalVolume = data?.recommendations.reduce((sum, item) => sum + item.volume_bbl_per_day, 0) ?? 0;
   const totalCost = data?.recommendations.reduce((sum, item) => sum + item.volume_bbl_per_day * item.cost_premium_per_barrel, 0) ?? 0;
 
@@ -136,7 +153,7 @@ const Procurement: React.FC = () => {
       <div className="proc-summary-row panel">
         <div className="proc-summary-item">
           <span className="proc-summary-label">SCENARIO</span>
-          <span className="proc-summary-value">{data?.scenario_id ?? 'SID-001'}</span>
+          <span className="proc-summary-value">{data?.scenario_id ?? '--'}</span>
         </div>
         <div className="proc-summary-item">
           <span className="proc-summary-label">TOTAL VOLUME</span>
@@ -226,8 +243,11 @@ const Procurement: React.FC = () => {
       </div>
 
       <div className="proc-authorize-section">
-        <button className="authorize-btn" onClick={handleAuthorizeAll} disabled={loading || submitting || pendingIds.length === 0}>
+        <button className="authorize-btn" onClick={handleAuthorizeAll} disabled={loading || submitting || allIds.length === 0}>
           {submitting ? 'AUTHORIZING...' : 'AUTHORIZE ALL PRIMARY RECOMMENDATIONS'}
+        </button>
+        <button className="export-btn" onClick={handleExportPdf} disabled={loading}>
+          EXPORT AS PDF
         </button>
       </div>
     </div>

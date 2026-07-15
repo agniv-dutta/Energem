@@ -233,3 +233,86 @@
 .table-btn-danger:hover {
   background-color: rgba(216, 82, 82, 0.15);
 }
+
+/* Responsive: Tablet */
+@media (max-width: 1024px) {
+  .corridor-title {
+    font-size: 18px;
+  }
+
+  .map-schematic {
+    min-height: 250px;
+    margin: 0 16px;
+  }
+
+  .manifest-section {
+    margin: 0 16px 16px;
+  }
+
+  .heatmap-bar {
+    width: 80px;
+  }
+}
+
+/* Responsive: Smaller Tablet / Phone */
+@media (max-width: 768px) {
+  .corridor-title-section {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .corridor-title-right {
+    text-align: left;
+  }
+
+  .map-schematic {
+    min-height: 200px;
+    margin: 0 12px;
+  }
+
+  .map-legend {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    margin: 12px;
+    background-color: var(--bg-panel);
+  }
+
+  .manifest-section {
+    margin: 0 12px 12px;
+    overflow-x: auto;
+  }
+
+  .manifest-table {
+    min-width: 600px;
+  }
+
+  .globe-section {
+    padding: 8px 12px;
+  }
+}
+
+/* Responsive: Small Phone */
+@media (max-width: 375px) {
+  .corridor-title-section {
+    padding: 12px;
+  }
+
+  .corridor-title {
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+
+  .latency-badge {
+    font-size: 10px;
+  }
+
+  .map-schematic {
+    min-height: 160px;
+  }
+
+  .heatmap-bar {
+    width: 60px;
+  }
+}

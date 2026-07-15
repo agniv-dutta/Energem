@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { fetchLatestSignals } from '../services/api';
+import HistoricalComparisonModal from '../components/HistoricalComparisonModal';
 import './Intelligence.css';
 
 const TABS = [
@@ -55,6 +56,7 @@ const Intelligence: React.FC = () => {
   const [signals, setSignals] = useState<SignalItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [fadingIn, setFadingIn] = useState(false);
+  const [compareSignalId, setCompareSignalId] = useState<string | null>(null);
   const prevTab = useRef('all');
 
   useEffect(() => {
@@ -145,7 +147,7 @@ const Intelligence: React.FC = () => {
                     <span className="conf-badge">CONFIDENCE: {sig.confidence.toUpperCase()}</span>
                   </div>
                   <p className="telex-content">{sig.body}</p>
-                  <div className="telex-meta-row">
+                    <div className="telex-meta-row">
                     <div className="telex-metric">
                       <span className="tm-label">RISK DELTA</span>
                       <span className="tm-value text-amber">{sig.impact.risk_delta}</span>
@@ -162,6 +164,14 @@ const Intelligence: React.FC = () => {
                       <span className="tm-label">DELAY</span>
                       <span className="tm-value text-muted">{signalAge(sig.timestamp)}</span>
                     </div>
+                    <div className="telex-metric">
+                      <button
+                        className="compare-btn"
+                        onClick={() => setCompareSignalId(sig.id)}
+                      >
+                        COMPARE WITH PRECEDENT
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -169,6 +179,12 @@ const Intelligence: React.FC = () => {
           })
         )}
       </div>
+
+      <HistoricalComparisonModal
+        signalId={compareSignalId || ''}
+        isOpen={!!compareSignalId}
+        onClose={() => setCompareSignalId(null)}
+      />
     </div>
   );
 };

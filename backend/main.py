@@ -57,6 +57,7 @@ async def root():
         "status": "running",
         "endpoints": {
             "health": "/api/health",
+            "landing": "/api/landing",
             "corridors_status": "/api/corridors/status",
             "dashboard": "/api/dashboard",
             "risk": "/api/risk",
@@ -75,5 +76,9 @@ async def root():
             "geospatial": "/api/geospatial",
             "compare": "/api/compare",
             "simulate": "/api/scenarios/simulate",
+            "procurement_recommendations": "/api/procurement/recommendations",
+            "procurement_authorize": "/api/procurement/authorize",
+            "procurement_export_pdf": "/api/procurement/export/pdf",
+            "historical_comparison": "/api/signals/{signal_id}/historical-comparison",
         },
     }

@@ -138,3 +138,71 @@
 .status-text div:first-child {
   color: var(--accent-teal);
 }
+
+/* Responsive: Tablet */
+@media (max-width: 1024px) {
+  .app-sidebar {
+    width: 200px;
+  }
+
+  .sidebar-top {
+    padding: 24px 16px;
+  }
+
+  .bearing-widget {
+    gap: 12px;
+  }
+
+  .bearing-visual {
+    width: 100px;
+    height: 100px;
+  }
+
+  .side-tab {
+    padding: 14px 16px;
+    font-size: 12px;
+  }
+}
+
+/* Responsive: Smaller Tablet / Phone */
+@media (max-width: 768px) {
+  .app-sidebar {
+    width: 100%;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+  }
+
+  .sidebar-top,
+  .sidebar-bottom {
+    display: none;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    padding: 0;
+    overflow-x: auto;
+  }
+
+  .side-tab {
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    padding: 16px 20px;
+  }
+
+  .side-tab.active {
+    border-left-color: transparent;
+    border-bottom-color: var(--accent-amber);
+  }
+}
+
+/* Responsive: Small Phone */
+@media (max-width: 375px) {
+  .side-tab {
+    padding: 12px 14px;
+    font-size: 11px;
+    gap: 8px;
+  }
+}

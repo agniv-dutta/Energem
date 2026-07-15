@@ -443,3 +443,159 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* Responsive: Tablet */
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 3.5rem;
+  }
+
+  .landing-value-prop {
+    margin-top: 4rem;
+  }
+
+  .value-col {
+    padding: 2rem 1.5rem;
+  }
+
+  .landing-visualizer {
+    gap: 2rem;
+  }
+
+  .visualizer-heading {
+    font-size: 1.6rem;
+  }
+
+  .stat-value {
+    font-size: 1.6rem;
+  }
+
+  .landing-stats {
+    padding: 2rem 1rem;
+  }
+}
+
+/* Responsive: Smaller Tablet / Phone */
+@media (max-width: 768px) {
+  .landing-masthead {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 1rem 1rem;
+  }
+
+  .masthead-center {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .compass-nav {
+    gap: 1rem;
+  }
+
+  .landing-hero {
+    padding: 4rem 1.5rem 2rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
+
+  .landing-value-prop {
+    flex-direction: column;
+    margin-top: 3rem;
+  }
+
+  .value-col {
+    border-right: none;
+    border-bottom: 1px solid var(--brass);
+    padding: 2rem 1.5rem;
+  }
+
+  .value-col:last-child {
+    border-bottom: none;
+  }
+
+  .landing-info-bar {
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    padding: 0.5rem 1rem;
+  }
+
+  .landing-stats {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem 1rem;
+  }
+
+  .stat-col {
+    border-right: none;
+  }
+
+  .stat-col::before {
+    display: none;
+  }
+
+  .landing-visualizer {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+  }
+
+  .visualizer-text {
+    order: 2;
+  }
+
+  .cta-button {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+/* Responsive: Small Phone */
+@media (max-width: 375px) {
+  .landing-masthead {
+    padding: 0.75rem;
+  }
+
+  .masthead-logo {
+    font-size: 1.2rem;
+  }
+
+  .compass-link {
+    font-size: 0.7rem;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-status {
+    font-size: 0.75rem;
+    padding: 0.4rem 1rem;
+  }
+
+  .value-col {
+    padding: 1.5rem 1rem;
+  }
+
+  .value-desc {
+    font-size: 0.85rem;
+  }
+
+  .stat-value {
+    font-size: 1.4rem;
+  }
+
+  .landing-ticker {
+    padding: 0.4rem 1rem;
+    font-size: 0.7rem;
+  }
+}

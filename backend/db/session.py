@@ -31,6 +31,8 @@ def init_db():
     Base.metadata.create_all(bind=engine)
     _ensure_procurement_schema()
     _seed_corridors()
+    _seed_historical_events()
+    _seed_risk_snapshot()
 
 
 def _ensure_procurement_schema():
@@ -75,6 +77,58 @@ def _seed_corridors():
                 inserted += 1
         if inserted:
             session.commit()
+    except Exception:
+        session.rollback()
+    finally:
+        session.close()
+
+
+def _seed_historical_events():
+    from backend.db.models import HistoricalEvent
+    from backend.services.historical_service import SEED_HISTORICAL_EVENTS
+
+    inspector = inspect(engine)
+    if "historical_events" not in inspector.get_table_names():
+        return
+    session = SessionLocal()
+    try:
+        count = session.query(HistoricalEvent).count()
+        if count:
+            return
+        for data in SEED_HISTORICAL_EVENTS:
+            session.add(HistoricalEvent(**data))
+        session.commit()
+    except Exception:
+        session.rollback()
+    finally:
+        session.close()
+
+
+def _seed_risk_snapshot():
+    from backend.db.models import RiskSnapshot
+
+    inspector = inspect(engine)
+    if "risk_snapshots" not in inspector.get_table_names():
+        return
+    session = SessionLocal()
+    try:
+        count = session.query(RiskSnapshot).count()
+        if count:
+            return
+        snapshot = RiskSnapshot(
+            composite_score=75.0,
+            corridor_scores={
+                "hormuz": 97.5,
+                "red_sea": 86.4,
+                "malacca": 42.2,
+                "suez": 35.0,
+                "land_route": 28.0,
+            },
+            signals_count=12,
+            confidence="medium",
+        )
+        session.add(snapshot)
+        session.commit()
     except Exception:
         session.rollback()
     finally:
