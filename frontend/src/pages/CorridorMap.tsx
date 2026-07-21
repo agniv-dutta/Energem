@@ -97,9 +97,7 @@ const CorridorMap: React.FC = () => {
 
   const topCorridor = corridors[0] ?? null;
   const topScore = topCorridor?.risk_score ?? 0;
-  const topFlow = topCorridor ? formatFlow(topCorridor.daily_flow_bbl) : '--';
   const topKey = topCorridor?.name?.toUpperCase() ?? 'HORMUZ';
-  const topThreat = topCorridor?.active_threats ?? 0;
 
   const updatedTime = corridorsUpdatedAt
     ? new Date(corridorsUpdatedAt).toISOString().replace('T', ' ').slice(0, 19) + ' ZULU'
