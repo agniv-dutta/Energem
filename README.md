@@ -1,4 +1,4 @@
-# EnergyGuard
+# Energem
 
 **AI-powered real-time energy supply chain resilience system for India**
 
@@ -14,7 +14,7 @@
 
 ---
 
-India imports 88% of its crude oil, with 40-45% transiting the Strait of Hormuz — a single point of failure. Current response time to supply shocks: 47 days. EnergyGuard detects disruptions 4-8 hours before market reaction, forecasts 30-90 day impact cascades, and recommends specific procurement actions — compressing response from 47 days to 47 minutes.
+India imports 88% of its crude oil, with 40-45% transiting the Strait of Hormuz - a single point of failure. Current response time to supply shocks: 47 days. Energem detects disruptions 4-8 hours before market reaction, forecasts 30-90 day impact cascades, and recommends specific procurement actions - compressing response from 47 days to 47 minutes.
 
 ---
 

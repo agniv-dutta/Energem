@@ -78,7 +78,8 @@ async def root():
             "simulate": "/api/scenarios/simulate",
             "procurement_recommendations": "/api/procurement/recommendations",
             "procurement_authorize": "/api/procurement/authorize",
-            "procurement_export_pdf": "/api/procurement/export/pdf",
+            "procurement_export_pptx": "/api/procurement/export/pptx",
+            "dashboard_export_pdf": "/api/dashboard/export/pdf",
             "historical_comparison": "/api/signals/{signal_id}/historical-comparison",
         },
     }

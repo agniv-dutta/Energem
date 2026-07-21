@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import './Procurement.css';
-import { authorizeRecommendations, fetchProcurementRecommendations } from '../services/api';
+import { authorizeRecommendations, exportProcurementPresentation, fetchProcurementRecommendations } from '../services/api';
 
 type ProcurementStatus = 'generated' | 'pending_approval' | 'approved' | 'pending_execution' | 'executed' | 'rejected';
 
@@ -117,17 +117,18 @@ const Procurement: React.FC = () => {
     }
   };
 
-  const handleExportPdf = async () => {
+  const handleExportPresentation = async () => {
     try {
-      const response = await fetch('/api/procurement/export/pdf');
-      const blob = await response.blob();
+      const response = await exportProcurementPresentation();
+      const blob = response.data;
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `energyguard_procurement_${new Date().toISOString().split('T')[0]}.txt`);
+      link.setAttribute('download', `energem_procurement_${new Date().toISOString().split('T')[0]}.pptx`);
       document.body.appendChild(link);
       link.click();
       link.parentElement?.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch {
       alert('Failed to export procurement report');
     }
@@ -246,8 +247,8 @@ const Procurement: React.FC = () => {
         <button className="authorize-btn" onClick={handleAuthorizeAll} disabled={loading || submitting || allIds.length === 0}>
           {submitting ? 'AUTHORIZING...' : 'AUTHORIZE ALL PRIMARY RECOMMENDATIONS'}
         </button>
-        <button className="export-btn" onClick={handleExportPdf} disabled={loading}>
-          EXPORT AS PDF
+        <button className="export-btn" onClick={handleExportPresentation} disabled={loading}>
+          EXPORT AS PPTX
         </button>
       </div>
     </div>

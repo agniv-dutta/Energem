@@ -1,5 +1,4 @@
 from datetime import datetime
-from io import BytesIO
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
@@ -22,6 +21,7 @@ from backend.services.corridor_service import get_dynamic_corridors
 from backend.services.historical_service import get_historical_comparison, seed_historical_events
 from backend.services.procurement_workflow import list_procurement_recommendations, authorize_recommendations
 from backend.services.news_signals import get_latest_signal_payload, refresh_signal_pipeline
+from backend.utils.report_exports import build_overview_pdf, build_procurement_pptx
 from backend.api.schemas import (
     NewsQuery,
     ScenarioQuery,
@@ -117,53 +117,64 @@ async def get_landing_data(db: Session = Depends(get_db)):
     }
 
 
-@router.get("/procurement/export/pdf")
-async def export_procurement_pdf(scenario_id: str | None = None, db: Session = Depends(get_db)):
+@router.get("/procurement/export/pptx")
+async def export_procurement_pptx(scenario_id: str | None = None, db: Session = Depends(get_db)):
     payload = list_procurement_recommendations(db, scenario_id=scenario_id)
-    lines = [
-        "ENERGYGUARD PROCUREMENT RECOMMENDATIONS",
-        "=" * 60,
-        f"Scenario: {payload['scenario_id']}",
-        f"Authority: {payload['authority_level'].upper()}",
-        f"Generated: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}",
-        "",
-        "-" * 60,
-    ]
-    total_volume = 0
-    total_cost = 0.0
-    for rec in payload.get("recommendations", []):
-        vol = rec.get("volume_bbl_per_day", 0)
-        prem = rec.get("cost_premium_per_barrel", 0)
-        total_volume += vol
-        total_cost += vol * prem
-        lines.extend([
-            f"PRIORITY {rec.get('priority', '?')} — {rec.get('supplier', 'Unknown').upper()}",
-            f"  Volume:     {vol:,} BBL/DAY",
-            f"  ETA:        {rec.get('eta_days', 0)} days",
-            f"  Premium:    ${prem:.2f}/bbl",
-            f"  Risk:       {rec.get('geopolitical_risk', 'low').upper()}",
-            f"  Confidence: {rec.get('confidence', 0)}%",
-            f"  Status:     {rec.get('status', 'unknown').upper()}",
-            f"  Reasoning:  {rec.get('reasoning', '')}",
-            "",
-        ])
-
-    lines.extend([
-        "-" * 60,
-        f"TOTAL VOLUME:   {total_volume:,} BBL/DAY",
-        f"TOTAL PREMIUM:  ${total_cost:,.0f}",
-        f"STATUS:         READY FOR EXECUTION",
-        "",
-        "END OF REPORT",
-    ])
-
-    content = "\n".join(lines)
-    buffer = BytesIO(content.encode("utf-8"))
+    content = build_procurement_pptx(payload)
     return StreamingResponse(
-        iter([buffer.getvalue()]),
-        media_type="text/plain",
+        iter([content]),
+        media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation",
         headers={
-            "Content-Disposition": f"attachment; filename=energyguard_procurement_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.txt"
+            "Content-Disposition": f"attachment; filename=energem_procurement_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.pptx"
+        },
+    )
+
+
+async def _build_dashboard_payload() -> DashboardResponse:
+    signals_data = await fetch_news(page_size=5)
+    cleaned = [clean_news_article(a) for a in signals_data]
+    signals = await process_articles(cleaned)
+    signals_text = " ".join([s.get("title", "") for s in signals_data])
+
+    market_data = await get_commodity_prices()
+    brent = float(market_data.get("brent_crude", {}).get("current_price", 95.00))
+
+    risk_result = await calculate_risks(brent_price=brent, signals=signals_text)
+
+    top_signal = signals[0] if signals else {}
+    scenario_result = await model_scenario(
+        scenario=f"{top_signal.get('corridor', 'Global')} disruption",
+        supply_loss_percent=top_signal.get("probability", 30),
+        brent_price=brent,
+    )
+
+    supply_gap = int(4800000 * scenario_result.get("supply_loss_percent", 30) / 100)
+    rec_result = await generate_recommendations(
+        scenario=scenario_result.get("scenario_name", "General disruption"),
+        supply_gap=supply_gap,
+        brent_price=brent,
+        confidence=scenario_result.get("confidence", "medium"),
+    )
+
+    return DashboardResponse(
+        risk=RiskResponse(**risk_result),
+        signals=[SignalResponse(**s) for s in signals],
+        market_data=MarketDataResponse(**market_data),
+        primary_scenario=ScenarioResponse(**scenario_result),
+        recommendations=RecommendationResponse(**rec_result),
+        timestamp=datetime.utcnow().isoformat(),
+    )
+
+
+@router.get("/dashboard/export/pdf")
+async def export_dashboard_pdf():
+    payload = await _build_dashboard_payload()
+    content = build_overview_pdf(payload.model_dump())
+    return StreamingResponse(
+        iter([content]),
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": f"attachment; filename=energem_overview_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.pdf"
         },
     )
 

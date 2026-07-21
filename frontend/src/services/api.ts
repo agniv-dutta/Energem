@@ -33,6 +33,20 @@ export async function authorizeRecommendations(params: {
   return data;
 }
 
+export async function exportOverviewReport() {
+  const response = await api.get('/api/dashboard/export/pdf', {
+    responseType: 'blob',
+  });
+  return response;
+}
+
+export async function exportProcurementPresentation() {
+  const response = await api.get('/api/procurement/export/pptx', {
+    responseType: 'blob',
+  });
+  return response;
+}
+
 export async function fetchLatestSignals(category = 'all') {
   const { data } = await api.get('/api/signals/latest', { params: { category } });
   return data;

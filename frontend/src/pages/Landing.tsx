@@ -220,7 +220,7 @@ const Landing: React.FC = () => {
         </section>
 
         <div className="landing-info-bar font-data">
-          <span>©2024 ENERGYGUARD INDUSTRIAL SYSTEMS | TERMINAL 07-B | SYSTEM STATS: NOMINAL PRESSURE: {data.risk_score} PSI RISK: ELEVATED LAT: 29.7604° N LON: 95.3698° W</span>
+          <span>2024 ENERGEM INDUSTRIAL SYSTEMS | TERMINAL 07-B | SYSTEM STATS: NOMINAL PRESSURE: {data.risk_score} PSI RISK: ELEVATED LAT: 29.7604 N LON: 95.3698 W</span>
         </div>
 
         <section className="landing-stats font-data">
