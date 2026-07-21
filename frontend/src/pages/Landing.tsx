@@ -20,6 +20,14 @@ const mockLandingData: LandingData = {
   last_updated_at: new Date().toISOString()
 };
 
+const COMPASS_BEARINGS = [
+  { angle: 0, label: 'OVERVIEW', route: '/overview' },
+  { angle: 72, label: 'LOGISTICS', route: '/map' },
+  { angle: 144, label: 'FORECAST', route: '/simulator' },
+  { angle: 216, label: 'PROCUREMENT', route: '/procurement' },
+  { angle: 288, label: 'INTELLIGENCE', route: '/intelligence' },
+];
+
 const Landing: React.FC = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<LandingData | null>(null);
@@ -81,12 +89,6 @@ const Landing: React.FC = () => {
               </svg>
               <div className="gauge-label font-data">SYSTEM PRESSURE: {data.risk_score} PSI</div>
             </div>
-            <nav className="compass-nav font-data">
-              <a href="#" className="compass-link active">000° LOGISTICS</a>
-              <a href="#" className="compass-link">090° REFINERY</a>
-              <a href="#" className="compass-link">180° PIPELINE</a>
-              <a href="#" className="compass-link">270° STORAGE</a>
-            </nav>
           </div>
           <div className="masthead-actions">
             <button className="icon-btn" style={{ color: 'var(--cyanotype)' }}><Settings size={20} /></button>
@@ -108,6 +110,70 @@ const Landing: React.FC = () => {
 
         <section className="landing-hero">
           <div className="hero-status font-data">OPERATIONAL STATUS: CRITICAL</div>
+
+          <div className="compass-rose-container">
+            <svg viewBox="0 0 400 400" className="compass-rose-svg">
+              <circle cx="200" cy="200" r="190" stroke="#A67C3D" strokeWidth="0.5" fill="none" opacity="0.2" />
+              <circle cx="200" cy="200" r="150" stroke="#4E8C86" strokeWidth="2" fill="none" />
+              <circle cx="200" cy="200" r="60" stroke="#A67C3D" strokeWidth="0.5" fill="none" opacity="0.3" />
+
+              {COMPASS_BEARINGS.map((bearing) => {
+                const rad = (bearing.angle - 90) * (Math.PI / 180);
+                const outerX = 200 + 140 * Math.cos(rad);
+                const outerY = 200 + 140 * Math.sin(rad);
+                const innerX = 200 + 65 * Math.cos(rad);
+                const innerY = 200 + 65 * Math.sin(rad);
+                const labelX = 200 + 172 * Math.cos(rad);
+                const labelY = 200 + 172 * Math.sin(rad);
+
+                return (
+                  <g key={bearing.angle}
+                     onClick={() => navigate(bearing.route)}
+                     style={{ cursor: 'pointer' }}
+                     className="compass-bearing">
+                    <line x1={innerX} y1={innerY} x2={outerX} y2={outerY}
+                          stroke="#A67C3D" strokeWidth="1.5" />
+                    <circle cx={outerX} cy={outerY} r="30"
+                            fill="transparent" />
+                    <text x={labelX} y={labelY - 8}
+                          textAnchor="middle" fill="#4E8C86"
+                          fontSize="14" fontWeight="bold"
+                          fontFamily="'IBM Plex Mono', monospace"
+                          className="bearing-angle-label">
+                      {bearing.angle.toString().padStart(3, '0')}°
+                    </text>
+                    <text x={labelX} y={labelY + 10}
+                          textAnchor="middle" fill="#C9C2AE"
+                          fontSize="10"
+                          fontFamily="'IBM Plex Mono', monospace"
+                          className="bearing-name-label">
+                      {bearing.label}
+                    </text>
+                  </g>
+                );
+              })}
+
+              <circle cx="200" cy="200" r="42"
+                      stroke="#A67C3D" strokeWidth="2" fill="none"
+                      onClick={() => navigate('/overview')}
+                      style={{ cursor: 'pointer' }} />
+              <text x="200" y="194" textAnchor="middle"
+                    fill="#E2892C" fontSize="11" fontWeight="bold"
+                    fontFamily="'Rajdhani', sans-serif"
+                    onClick={() => navigate('/overview')}
+                    style={{ cursor: 'pointer' }}>
+                ENTER
+              </text>
+              <text x="200" y="210" textAnchor="middle"
+                    fill="#E2892C" fontSize="10" fontWeight="bold"
+                    fontFamily="'Rajdhani', sans-serif"
+                    onClick={() => navigate('/overview')}
+                    style={{ cursor: 'pointer' }}>
+                DASHBOARD
+              </text>
+            </svg>
+          </div>
+
           <h1 className="hero-title font-display">
             SUPPLY RESILIENCE WHEN<br />
             <span className="highlight">EVERY HOUR COUNTS</span>
@@ -174,10 +240,62 @@ const Landing: React.FC = () => {
 
         <section className="landing-visualizer">
           <div className="visualizer-box">
-            <div className="visualizer-title font-data">NODE_VISUALIZATION_V4</div>
-            <div style={{ height: '300px', backgroundColor: '#1a1a1a', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #333' }}>
-              <Network size={64} style={{ opacity: 0.2, color: 'var(--cyanotype)' }} />
-            </div>
+            <div className="visualizer-title font-data">SUPPLY CHAIN SCHEMATIC</div>
+            <svg viewBox="0 0 800 300" className="node-viz-svg">
+              <g className="origin-nodes">
+                <rect x="10" y="20" width="100" height="36" fill="#14171A" stroke="#4E8C86" strokeWidth="1.5" />
+                <text x="60" y="43" textAnchor="middle" fontSize="9" fill="#4E8C86" fontWeight="bold" fontFamily="'IBM Plex Mono', monospace">SAUDI ARABIA</text>
+                <rect x="10" y="70" width="100" height="36" fill="#14171A" stroke="#4E8C86" strokeWidth="1.5" />
+                <text x="60" y="93" textAnchor="middle" fontSize="9" fill="#4E8C86" fontWeight="bold" fontFamily="'IBM Plex Mono', monospace">IRAQ</text>
+                <rect x="10" y="120" width="100" height="36" fill="#14171A" stroke="#4E8C86" strokeWidth="1.5" />
+                <text x="60" y="143" textAnchor="middle" fontSize="9" fill="#4E8C86" fontWeight="bold" fontFamily="'IBM Plex Mono', monospace">IRAN</text>
+                <rect x="10" y="180" width="100" height="36" fill="#14171A" stroke="#E2892C" strokeWidth="1.5" />
+                <text x="60" y="203" textAnchor="middle" fontSize="9" fill="#E2892C" fontWeight="bold" fontFamily="'IBM Plex Mono', monospace">AFRICA/ME</text>
+                <rect x="10" y="240" width="100" height="36" fill="#14171A" stroke="#A67C3D" strokeWidth="1.5" />
+                <text x="60" y="263" textAnchor="middle" fontSize="9" fill="#A67C3D" fontWeight="bold" fontFamily="'IBM Plex Mono', monospace">RUSSIA</text>
+              </g>
+
+              <g className="chokepoint-nodes">
+                <circle cx="380" cy="55" r="32" fill="none" stroke="#B23A2E" strokeWidth="2" />
+                <line x1="368" y1="55" x2="392" y2="55" stroke="#B23A2E" strokeWidth="1.5" />
+                <text x="380" y="52" textAnchor="middle" fontSize="8" fill="#B23A2E" fontWeight="bold" fontFamily="'IBM Plex Mono', monospace">HORMUZ</text>
+                <text x="380" y="62" textAnchor="middle" fontSize="7" fill="#B23A2E" fontFamily="'IBM Plex Mono', monospace">97.5%</text>
+
+                <circle cx="380" cy="130" r="32" fill="none" stroke="#E2892C" strokeWidth="2" />
+                <line x1="368" y1="130" x2="392" y2="130" stroke="#E2892C" strokeWidth="1.5" />
+                <text x="380" y="127" textAnchor="middle" fontSize="8" fill="#E2892C" fontWeight="bold" fontFamily="'IBM Plex Mono', monospace">RED SEA</text>
+                <text x="380" y="137" textAnchor="middle" fontSize="7" fill="#E2892C" fontFamily="'IBM Plex Mono', monospace">86.4%</text>
+
+                <circle cx="380" cy="205" r="32" fill="none" stroke="#A67C3D" strokeWidth="2" />
+                <line x1="368" y1="205" x2="392" y2="205" stroke="#A67C3D" strokeWidth="1.5" />
+                <text x="380" y="202" textAnchor="middle" fontSize="8" fill="#A67C3D" fontWeight="bold" fontFamily="'IBM Plex Mono', monospace">MALACCA</text>
+                <text x="380" y="212" textAnchor="middle" fontSize="7" fill="#A67C3D" fontFamily="'IBM Plex Mono', monospace">42.2%</text>
+
+                <circle cx="380" cy="270" r="28" fill="none" stroke="#74804A" strokeWidth="1.5" />
+                <line x1="370" y1="270" x2="390" y2="270" stroke="#74804A" strokeWidth="1" />
+                <text x="380" y="268" textAnchor="middle" fontSize="8" fill="#74804A" fontWeight="bold" fontFamily="'IBM Plex Mono', monospace">SUEZ</text>
+                <text x="380" y="277" textAnchor="middle" fontSize="7" fill="#74804A" fontFamily="'IBM Plex Mono', monospace">35.8%</text>
+              </g>
+
+              <g className="routing-lines" opacity="0.8">
+                <line x1="110" y1="38" x2="348" y2="55" stroke="#B23A2E" strokeWidth="1.5" />
+                <line x1="110" y1="88" x2="348" y2="55" stroke="#B23A2E" strokeWidth="1.5" />
+                <line x1="110" y1="138" x2="348" y2="55" stroke="#B23A2E" strokeWidth="1.5" />
+                <line x1="110" y1="198" x2="348" y2="130" stroke="#E2892C" strokeWidth="1.5" />
+                <line x1="110" y1="258" x2="348" y2="205" stroke="#A67C3D" strokeWidth="1.5" />
+
+                <line x1="412" y1="55" x2="640" y2="150" stroke="#4E8C86" strokeWidth="1.5" />
+                <line x1="412" y1="130" x2="640" y2="150" stroke="#4E8C86" strokeWidth="1.5" />
+                <line x1="412" y1="205" x2="640" y2="150" stroke="#4E8C86" strokeWidth="1.5" />
+                <line x1="408" y1="270" x2="640" y2="150" stroke="#4E8C86" strokeWidth="1" opacity="0.5" />
+              </g>
+
+              <g className="destination-node">
+                <rect x="640" y="120" width="120" height="60" fill="#14171A" stroke="#4E8C86" strokeWidth="2" />
+                <text x="700" y="148" textAnchor="middle" fontSize="12" fill="#4E8C86" fontWeight="bold" fontFamily="'IBM Plex Mono', monospace">INDIA</text>
+                <text x="700" y="165" textAnchor="middle" fontSize="9" fill="#A67C3D" fontFamily="'IBM Plex Mono', monospace">REFINERY</text>
+              </g>
+            </svg>
             <div className="visualizer-footer font-data">
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <div style={{ width: '8px', height: '8px', backgroundColor: 'var(--cyanotype)' }}></div>

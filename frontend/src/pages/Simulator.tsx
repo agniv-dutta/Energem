@@ -51,10 +51,11 @@ const Simulator: React.FC = () => {
     setSelectedNodes((prev) => ({ ...prev, [name]: !prev[name] }));
   };
 
+  const timelineDays = simulationResult?.timeline ?? [];
+
   return (
     <div className="simulator-page">
       <div className="sim-body">
-        {/* Left Panel - Parameters */}
         <div className="sim-params-panel">
           <div className="sim-params-header">
             <h3>SET PARAMETERS</h3>
@@ -117,7 +118,6 @@ const Simulator: React.FC = () => {
           {simulationRunning && <div className="sim-spinner" />}
         </div>
 
-        {/* Right Panel - Oscilloscope Output */}
         <div className="sim-output-panel">
           <div className="output-header">
             <h3>PROJECTED TIMELINE // OSCILLOSCOPE OUTPUT</h3>
@@ -130,79 +130,50 @@ const Simulator: React.FC = () => {
           <div className="oscilloscope panel">
             {simulationResult ? (
               <>
-                <div className="osc-grid">
-                  {simulationResult.timeline.map((t) => (
-                    <div key={t.day} className="osc-col">
-                      <div className="osc-col-label">DAY {String(t.day).padStart(2, '0')}</div>
+                <div className="timeline-grid">
+                  {timelineDays.map((t) => (
+                    <div key={t.day} className="timeline-day-col">
+                      <div className="timeline-day-label">DAY {String(t.day).padStart(2, '0')}</div>
+
+                      <div className="timeline-metric">
+                        <div className="metric-val text-red">-{t.supply_loss_bbl.toLocaleString()}</div>
+                        <div className="metric-unit">BBL/D</div>
+                      </div>
+
+                      <div className="timeline-metric">
+                        <div className="metric-val text-amber">${t.brent_price}/BBL</div>
+                        <div className="metric-trend">({t.brent_price > 90 ? '+' : ''}{((t.brent_price - 90) / 90 * 100).toFixed(0)}%)</div>
+                      </div>
+
+                      <div className="timeline-metric">
+                        <div className="metric-val text-teal">SPR: {t.spr_remaining_days}d</div>
+                        <div className="metric-trend">({t.spr_remaining_days < 9.3 ? '' : '+'}{(t.spr_remaining_days - 9.3).toFixed(1)}d)</div>
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                <svg className="osc-svg" viewBox="0 0 600 280" preserveAspectRatio="none">
-                  {simulationResult.timeline.length > 1 && (() => {
-                    const maxLoss = Math.max(...simulationResult.timeline.map((t) => t.supply_loss_bbl));
-                    const w = 600 / (simulationResult.timeline.length - 1);
-                    const supplyPoints = simulationResult.timeline.map((t, i) => {
-                      const x = i * w;
-                      const y = 260 - (t.supply_loss_bbl / maxLoss) * 200;
-                      return `${x},${y}`;
-                    });
-                    const pricePoints = simulationResult.timeline.map((t, i) => {
-                      const x = i * w;
-                      const y = 260 - ((t.brent_price - 90) / 60) * 200;
-                      return `${x},${y}`;
-                    });
-                    return (
-                      <>
-                        <polyline points={supplyPoints.join(' ')} fill="none" stroke="#75c4b8" strokeWidth="2" strokeDasharray="6 3" opacity="0.9" />
-                        <polyline points={pricePoints.join(' ')} fill="none" stroke="#d09c5a" strokeWidth="2" strokeDasharray="6 3" opacity="0.9" />
-                        {/* Sharp markers at each data point */}
-                        {simulationResult.timeline.map((t, i) => {
-                          const sx = i * w;
-                          const sy = 260 - (t.supply_loss_bbl / maxLoss) * 200;
-                          const py = 260 - ((t.brent_price - 90) / 60) * 200;
-                          return (
-                            <g key={i}>
-                              <circle cx={sx} cy={sy} r="4" fill="#75c4b8" stroke="#1a1a1a" strokeWidth="1" />
-                              <circle cx={sx} cy={py} r="4" fill="#d09c5a" stroke="#1a1a1a" strokeWidth="1" />
-                            </g>
-                          );
-                        })}
-                      </>
-                    );
-                  })()}
-                </svg>
+                <div className="timeline-divider"></div>
 
-                {/* Tooltips at each day marker */}
-                <div className="osc-tooltip-row">
-                  {simulationResult.timeline.map((t) => (
-                    <div key={t.day} className="osc-tooltip-item">
-                      <div className="tooltip-header">DAY {t.day}</div>
-                      <div className="tooltip-val">-{t.supply_loss_bbl.toLocaleString()}</div>
-                      <div className="tooltip-unit">BBL/D</div>
-                      <div className="tooltip-price">${t.brent_price}/BBL</div>
-                      <div className="tooltip-spr">SPR: {t.spr_remaining_days}d</div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Bottom Results Metrics */}
-                <div className="sim-results-row">
-                  <div className="sim-result panel">
-                    <div className="result-label">TOTAL DEFICIT</div>
-                    <div className="result-value text-teal">{simulationResult.summary.total_deficit_display}</div>
+                <div className="timeline-summary-row">
+                  <div className="summary-item">
+                    <span className="summary-label">TOTAL DEFICIT</span>
+                    <span className="summary-val text-red">{simulationResult.summary.total_deficit_display}</span>
                   </div>
-                  <div className="sim-result panel">
-                    <div className="result-label">PRICE CEILING</div>
-                    <div className="result-value text-amber">{simulationResult.summary.peak_price_display}</div>
+                  <div className="summary-item">
+                    <span className="summary-label">PRICE CEILING</span>
+                    <span className="summary-val text-amber">{simulationResult.summary.peak_price_display}</span>
                   </div>
-                  <div className="sim-result panel">
-                    <div className="result-label">RECOVERY_EST</div>
-                    <div className="result-value text-red">{simulationResult.summary.recovery_estimate}</div>
+                  <div className="summary-item">
+                    <span className="summary-label">SPR CRITICAL DAY</span>
+                    <span className="summary-val text-teal">{simulationResult.summary.spr_critical_day}</span>
+                  </div>
+                  <div className="summary-item">
+                    <span className="summary-label">RECOVERY ESTIMATE</span>
+                    <span className="summary-val text-main">{simulationResult.summary.recovery_estimate}</span>
                   </div>
                 </div>
 
-                {/* Flags */}
                 {simulationResult.flags.length > 0 && (
                   <div className="sim-flags">
                     {simulationResult.flags.map((f, i) => (
@@ -214,38 +185,48 @@ const Simulator: React.FC = () => {
                 )}
               </>
             ) : (
-              <div className="osc-placeholder">
-                <div className="osc-grid">
-                  <div className="osc-col"><div className="osc-col-label">DAY 01</div></div>
-                  <div className="osc-col"><div className="osc-col-label">DAY 05</div></div>
-                  <div className="osc-col"><div className="osc-col-label">DAY 10</div></div>
-                  <div className="osc-col"><div className="osc-col-label">DAY 30</div></div>
+              <>
+                <div className="timeline-grid placeholder-grid">
+                  {['01', '05', '10', '30'].map((day) => (
+                    <div key={day} className="timeline-day-col placeholder-col">
+                      <div className="timeline-day-label">DAY {day}</div>
+                      <div className="timeline-metric">
+                        <div className="metric-val text-muted">—</div>
+                        <div className="metric-unit">BBL/D</div>
+                      </div>
+                      <div className="timeline-metric">
+                        <div className="metric-val text-muted">—</div>
+                        <div className="metric-unit">$/BBL</div>
+                      </div>
+                      <div className="timeline-metric">
+                        <div className="metric-val text-muted">SPR: —</div>
+                        <div className="metric-unit">REMAINING</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <svg className="osc-svg" viewBox="0 0 600 280" preserveAspectRatio="none">
-                  <polyline points="0,260 60,250 150,200 250,120 350,80 450,90 550,100 600,105" fill="none" stroke="#75c4b8" strokeWidth="1.5" strokeDasharray="6 3" opacity="0.4" />
-                  <polyline points="0,260 60,255 150,230 250,180 350,140 450,150 550,155 600,158" fill="none" stroke="#d09c5a" strokeWidth="1.5" strokeDasharray="6 3" opacity="0.4" />
-                </svg>
-                <div className="osc-tooltip">
-                  <div className="tooltip-header">DAY 15</div>
-                  <div className="tooltip-val">-420K</div>
-                  <div className="tooltip-unit">BBL/D</div>
-                  <div className="tooltip-price">+$12.40/BBL</div>
-                </div>
-                <div className="sim-results-row">
-                  <div className="sim-result panel">
-                    <div className="result-label">TOTAL DEFICIT</div>
-                    <div className="result-value text-teal">—</div>
+
+                <div className="timeline-divider"></div>
+
+                <div className="timeline-summary-row">
+                  <div className="summary-item">
+                    <span className="summary-label">TOTAL DEFICIT</span>
+                    <span className="summary-val text-muted">—</span>
                   </div>
-                  <div className="sim-result panel">
-                    <div className="result-label">PRICE CEILING</div>
-                    <div className="result-value text-amber">—</div>
+                  <div className="summary-item">
+                    <span className="summary-label">PRICE CEILING</span>
+                    <span className="summary-val text-muted">—</span>
                   </div>
-                  <div className="sim-result panel">
-                    <div className="result-label">RECOVERY_EST</div>
-                    <div className="result-value text-red">—</div>
+                  <div className="summary-item">
+                    <span className="summary-label">SPR CRITICAL DAY</span>
+                    <span className="summary-val text-muted">—</span>
+                  </div>
+                  <div className="summary-item">
+                    <span className="summary-label">RECOVERY ESTIMATE</span>
+                    <span className="summary-val text-muted">—</span>
                   </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
         </div>

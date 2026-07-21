@@ -7,7 +7,6 @@
   height: 100%;
 }
 
-/* Header */
 .proc-header-section {
   display: flex;
   justify-content: space-between;
@@ -52,7 +51,47 @@
   font-weight: 500;
 }
 
-/* Cards */
+.proc-summary-row {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border-color);
+}
+
+.proc-summary-item {
+  flex: 1;
+  padding: 16px 20px;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.proc-summary-item:last-child {
+  border-right: none;
+}
+
+.proc-summary-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.proc-summary-value {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.proc-error {
+  padding: 12px 16px;
+  color: var(--accent-red);
+  font-size: 12px;
+  letter-spacing: 1px;
+  border: 1px solid var(--accent-red);
+  background-color: rgba(216, 82, 82, 0.08);
+}
+
 .proc-cards {
   display: flex;
   flex-direction: column;
@@ -135,6 +174,7 @@
   font-size: 14px;
   letter-spacing: 1px;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .proc-card-footer {
@@ -157,13 +197,6 @@
   font-family: var(--font-sans);
 }
 
-.proc-denied {
-  font-size: 12px;
-  letter-spacing: 1px;
-  padding: 16px 0;
-}
-
-/* Confidence Metric */
 .proc-card-confidence {
   width: 200px;
   padding: 24px 16px;
@@ -210,15 +243,15 @@
   letter-spacing: 1px;
 }
 
-/* Locked Card */
 .proc-card.locked {
   opacity: 0.5;
 }
 
-/* Authorize Button */
 .proc-authorize-section {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
   padding: 16px 0;
 }
 
@@ -233,6 +266,30 @@
   border: none;
   transition: all 0.2s ease;
   width: 60%;
+  min-height: 54px;
+  position: relative;
+}
+
+.authorize-btn::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid var(--accent-amber);
+  border-left: 2px solid var(--accent-amber);
+}
+
+.authorize-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  width: 12px;
+  height: 12px;
+  border-bottom: 2px solid var(--accent-amber);
+  border-right: 2px solid var(--accent-amber);
 }
 
 .authorize-btn:hover:not(:disabled) {
@@ -245,54 +302,24 @@
   cursor: not-allowed;
 }
 
-.proc-denied-text {
+.export-btn {
+  font-family: var(--font-tech);
   font-size: 11px;
   letter-spacing: 1px;
+  padding: 8px 16px;
+  border: 1px solid var(--accent-teal);
+  color: var(--accent-teal);
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
 }
 
-/* Summary Row */
-.proc-summary-row {
-  display: flex;
-  gap: 0;
-  border: 1px solid var(--border-color);
+.export-btn:hover {
+  background-color: rgba(117, 196, 184, 0.15);
+  color: var(--text-main);
 }
 
-.proc-summary-item {
-  flex: 1;
-  padding: 16px 20px;
-  border-right: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.proc-summary-item:last-child {
-  border-right: none;
-}
-
-.proc-summary-label {
-  font-size: 9px;
-  color: var(--text-muted);
-  letter-spacing: 1px;
-}
-
-.proc-summary-value {
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 1px;
-}
-
-/* Error */
-.proc-error {
-  padding: 12px 16px;
-  color: var(--accent-red);
-  font-size: 12px;
-  letter-spacing: 1px;
-  border: 1px solid var(--accent-red);
-  background-color: rgba(216, 82, 82, 0.08);
-}
-
-/* Readiness */
 .proc-readiness {
   display: flex;
   justify-content: space-between;
@@ -323,7 +350,6 @@
   max-width: 60%;
 }
 
-/* Accent variants */
 .approved-accent {
   background-color: var(--accent-teal);
 }
@@ -332,7 +358,6 @@
   background-color: var(--accent-amber);
 }
 
-/* Badge per status */
 .proc-badge.generated {
   border-color: #555;
   color: #888;
@@ -360,24 +385,6 @@
   color: var(--accent-red);
 }
 
-.export-btn {
-  font-family: var(--font-tech);
-  font-size: 11px;
-  letter-spacing: 1px;
-  padding: 8px 16px;
-  border: 1px solid var(--accent-teal);
-  color: var(--accent-teal);
-  background-color: transparent;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.export-btn:hover {
-  background-color: rgba(117, 196, 184, 0.15);
-  color: var(--text-main);
-}
-
-/* Responsive: Tablet */
 @media (max-width: 1024px) {
   .procurement-page {
     padding: 24px;
@@ -396,7 +403,6 @@
   }
 }
 
-/* Responsive: Smaller Tablet / Phone */
 @media (max-width: 768px) {
   .procurement-page {
     padding: 16px;
@@ -480,7 +486,6 @@
   }
 }
 
-/* Responsive: Small Phone */
 @media (max-width: 375px) {
   .procurement-page {
     padding: 12px;

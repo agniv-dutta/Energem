@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600&display=swap');
 
 :root {
-  /* Color Palette */
   --bg-dark: #121212;
   --bg-panel: #1a1a1a;
   --bg-sidebar: #171717;
@@ -17,7 +16,6 @@
   --border-color: #333333;
   --border-light: #444444;
 
-  /* Typography */
   --font-tech: 'Share Tech Mono', monospace;
   --font-sans: 'Inter', sans-serif;
 }
@@ -37,7 +35,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -67,11 +64,19 @@ button {
   font-family: inherit;
 }
 
-/* Layout Utilities */
 .app-container {
   display: flex;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  overflow: hidden;
+}
+
+.main-wrapper {
+  display: flex;
+  flex: 1;
   overflow: hidden;
 }
 
@@ -85,10 +90,9 @@ button {
 .content-area {
   flex: 1;
   overflow-y: auto;
-  padding: 0; /* Let specific pages handle padding */
+  position: relative;
 }
 
-/* Common UI Elements */
 .panel {
   background-color: var(--bg-panel);
   border: 1px solid var(--border-color);
@@ -103,3 +107,127 @@ button {
 .bg-amber { background-color: var(--accent-amber); }
 .bg-teal { background-color: var(--accent-teal); }
 .bg-red { background-color: var(--accent-red); }
+
+/* Global Button Styles - Military Operations Standard */
+button, .btn {
+  min-height: 44px;
+  min-width: fit-content;
+  padding: 12px 24px;
+  overflow: visible;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.btn-brass {
+  background: var(--accent-amber);
+  color: var(--bg-dark);
+  font-family: var(--font-tech);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  border: none;
+  padding: 12px 24px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.btn-brass:hover {
+  background: #e0aa68;
+}
+
+.btn-brass::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid var(--accent-amber);
+  border-left: 2px solid var(--accent-amber);
+}
+
+.btn-brass::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  width: 12px;
+  height: 12px;
+  border-bottom: 2px solid var(--accent-amber);
+  border-right: 2px solid var(--accent-amber);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--accent-teal);
+  color: var(--accent-teal);
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 8px 16px;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  background-color: rgba(117, 196, 184, 0.15);
+  color: var(--text-main);
+}
+
+/* Monospace Data Rendering */
+.data-mono {
+  font-family: var(--font-tech);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  color: var(--text-muted);
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+.loading-bar {
+  width: 120px;
+  height: 2px;
+  background-color: var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -40px;
+  width: 40px;
+  height: 100%;
+  background-color: var(--accent-teal);
+  animation: loading-slide 1s ease-in-out infinite;
+}
+
+@keyframes loading-slide {
+  0% { left: -40px; }
+  100% { left: 120px; }
+}
+
+/* Spinner */
+.sim-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border-color);
+  border-top-color: var(--accent-amber);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 16px auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

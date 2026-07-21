@@ -4,7 +4,6 @@
   height: 100%;
 }
 
-/* Scrolling Ticker */
 .ticker-bar {
   background-color: #0d0d0d;
   border-bottom: 1px solid var(--border-color);
@@ -38,7 +37,6 @@
   100% { transform: translateX(-50%); }
 }
 
-/* Title Section */
 .corridor-title-section {
   display: flex;
   justify-content: space-between;
@@ -76,11 +74,10 @@
   letter-spacing: 1px;
 }
 
-/* Map Schematic */
 .map-schematic {
   margin: 0 24px;
   flex: 1;
-  min-height: 300px;
+  min-height: 340px;
   position: relative;
   background-color: #111;
   overflow: hidden;
@@ -118,22 +115,8 @@
   flex-shrink: 0;
 }
 
-/* Globe Section */
-.globe-section {
-  padding: 8px 24px;
-}
-
-.globe-label {
-  font-size: 10px;
-  color: var(--text-muted);
-  letter-spacing: 1px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-/* Manifest Table */
 .manifest-section {
-  margin: 0 24px 24px;
+  margin: 16px 24px 24px;
   border: 1px solid var(--border-color);
   background-color: var(--bg-panel);
 }
@@ -234,14 +217,13 @@
   background-color: rgba(216, 82, 82, 0.15);
 }
 
-/* Responsive: Tablet */
 @media (max-width: 1024px) {
   .corridor-title {
     font-size: 18px;
   }
 
   .map-schematic {
-    min-height: 250px;
+    min-height: 280px;
     margin: 0 16px;
   }
 
@@ -254,7 +236,6 @@
   }
 }
 
-/* Responsive: Smaller Tablet / Phone */
 @media (max-width: 768px) {
   .corridor-title-section {
     flex-direction: column;
@@ -267,7 +248,7 @@
   }
 
   .map-schematic {
-    min-height: 200px;
+    min-height: 220px;
     margin: 0 12px;
   }
 
@@ -287,13 +268,8 @@
   .manifest-table {
     min-width: 600px;
   }
-
-  .globe-section {
-    padding: 8px 12px;
-  }
 }
 
-/* Responsive: Small Phone */
 @media (max-width: 375px) {
   .corridor-title-section {
     padding: 12px;
@@ -309,7 +285,7 @@
   }
 
   .map-schematic {
-    min-height: 160px;
+    min-height: 180px;
   }
 
   .heatmap-bar {

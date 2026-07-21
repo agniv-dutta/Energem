@@ -16,7 +16,6 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  /* Centered with max-width */
   align-items: center;
   width: 100%;
 }
@@ -28,7 +27,6 @@
   flex-direction: column;
 }
 
-/* Typography Overrides */
 .font-display {
   font-family: 'Rajdhani', sans-serif;
   text-transform: uppercase;
@@ -40,7 +38,6 @@
   letter-spacing: 0.05em;
 }
 
-/* Hairline divider */
 .brass-divider {
   border: 0;
   height: 1px;
@@ -56,7 +53,6 @@
   margin: 0;
 }
 
-/* Section 1: Masthead */
 .landing-masthead {
   display: flex;
   align-items: center;
@@ -96,35 +92,12 @@
   margin-top: 4px;
 }
 
-.compass-nav {
-  display: flex;
-  gap: 2rem;
-}
-
-.compass-link {
-  font-size: 0.8rem;
-  color: var(--manifest-paper);
-  opacity: 0.4;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.compass-link.active {
-  color: var(--cyanotype);
-  opacity: 1;
-  border-bottom: 1px solid var(--cyanotype);
-  padding-bottom: 2px;
-}
-
 .masthead-actions {
   display: flex;
   gap: 1rem;
   color: var(--cyanotype);
 }
 
-/* Section 2: Ticker Feed */
 .landing-ticker {
   background-color: var(--manifest-paper);
   color: var(--void);
@@ -140,7 +113,7 @@
   display: flex;
   gap: 3rem;
   align-items: center;
-  animation: none; /* Controlled by React component */
+  animation: none;
 }
 
 .ticker-item {
@@ -154,13 +127,12 @@
   text-decoration: underline;
 }
 
-/* Section 3: Hero */
 .landing-hero {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 6rem 2rem 4rem;
+  padding: 4rem 2rem 3rem;
 }
 
 .hero-status {
@@ -170,6 +142,29 @@
   font-size: 0.9rem;
   letter-spacing: 0.2em;
   margin-bottom: 2rem;
+}
+
+.compass-rose-container {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 2rem;
+}
+
+.compass-rose-svg {
+  width: 320px;
+  height: 320px;
+}
+
+.compass-bearing:hover .bearing-angle-label {
+  fill: var(--flare-amber);
+}
+
+.compass-bearing:hover .bearing-name-label {
+  fill: var(--flare-amber);
+}
+
+.compass-bearing:hover line {
+  stroke: var(--flare-amber);
 }
 
 .hero-title {
@@ -192,14 +187,12 @@
   line-height: 1.6;
 }
 
-/* Section 4: CTA Button */
 .cta-container {
   margin-top: 2rem;
   position: relative;
   padding: 1rem;
 }
 
-/* Corner brackets */
 .cta-container::before, .cta-container::after,
 .cta-button::before, .cta-button::after {
   content: '';
@@ -225,6 +218,10 @@
   cursor: pointer;
   transition: all 0.1s ease-out;
   position: relative;
+  min-width: 220px;
+  white-space: nowrap;
+  overflow: visible;
+  text-align: center;
 }
 
 .cta-button:hover {
@@ -234,7 +231,6 @@
   border-color: var(--flare-amber);
 }
 
-/* Section 5: Three Columns */
 .landing-value-prop {
   display: flex;
   margin-top: 6rem;
@@ -283,7 +279,6 @@
   opacity: 0.8;
 }
 
-/* Section 6: Info Bar */
 .landing-info-bar {
   background-color: rgba(166, 124, 61, 0.1);
   border-bottom: 1px solid var(--brass);
@@ -295,7 +290,6 @@
   font-size: 0.75rem;
 }
 
-/* Section 7: Stats Row */
 .landing-stats {
   display: flex;
   padding: 3rem 2rem;
@@ -308,7 +302,7 @@
 }
 
 .stat-col:not(:last-child) {
-  border-right: 1px solid var(--border-color); /* Need a muted color here or brass? Mockup has subtle line */
+  border-right: 1px solid var(--border-color);
 }
 .stat-col {
   position: relative;
@@ -350,7 +344,6 @@
   opacity: 0.3;
 }
 
-/* Section 8: Visualizer */
 .landing-visualizer {
   display: flex;
   padding: 2rem;
@@ -365,7 +358,6 @@
   position: relative;
 }
 
-/* Corners for visualizer */
 .visualizer-box::before, .visualizer-box::after {
   content: '';
   position: absolute;
@@ -387,11 +379,9 @@
   font-size: 0.8rem;
 }
 
-.visualizer-image {
+.node-viz-svg {
   width: 100%;
-  height: auto;
-  filter: grayscale(100%) contrast(120%);
-  opacity: 0.8;
+  height: 300px;
 }
 
 .visualizer-footer {
@@ -434,7 +424,6 @@
   line-height: 1.5;
 }
 
-/* Animations */
 .fade-in {
   animation: fadeIn 0.2s ease-in;
 }
@@ -444,7 +433,6 @@
   to { opacity: 1; }
 }
 
-/* Responsive: Tablet */
 @media (max-width: 1024px) {
   .hero-title {
     font-size: 3.5rem;
@@ -473,9 +461,13 @@
   .landing-stats {
     padding: 2rem 1rem;
   }
+
+  .compass-rose-svg {
+    width: 260px;
+    height: 260px;
+  }
 }
 
-/* Responsive: Smaller Tablet / Phone */
 @media (max-width: 768px) {
   .landing-masthead {
     flex-wrap: wrap;
@@ -490,12 +482,8 @@
     gap: 1rem;
   }
 
-  .compass-nav {
-    gap: 1rem;
-  }
-
   .landing-hero {
-    padding: 4rem 1.5rem 2rem;
+    padding: 3rem 1.5rem 2rem;
   }
 
   .hero-title {
@@ -505,6 +493,11 @@
   .hero-subtitle {
     font-size: 0.9rem;
     max-width: 100%;
+  }
+
+  .compass-rose-svg {
+    width: 240px;
+    height: 240px;
   }
 
   .landing-value-prop {
@@ -559,7 +552,6 @@
   }
 }
 
-/* Responsive: Small Phone */
 @media (max-width: 375px) {
   .landing-masthead {
     padding: 0.75rem;
@@ -569,10 +561,6 @@
     font-size: 1.2rem;
   }
 
-  .compass-link {
-    font-size: 0.7rem;
-  }
-
   .hero-title {
     font-size: 2rem;
   }
@@ -580,6 +568,11 @@
   .hero-status {
     font-size: 0.75rem;
     padding: 0.4rem 1rem;
+  }
+
+  .compass-rose-svg {
+    width: 200px;
+    height: 200px;
   }
 
   .value-col {
